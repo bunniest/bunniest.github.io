@@ -84,42 +84,55 @@
     <hr class="rule">
     <footer>
       <div class="footer-links">
-        <a href="/cdn-cgi/l/email-protection#4930263c092c24282025672a2624">contact</a>
+        <a href="mailto:you@email.com">contact</a>
         <a href="guestbook.html">guestbook</a>
         <a href="feed.xml">rss</a>
       </div>
       <span>made with &#9825;</span>
     </footer>
   </div>
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script>
+  <script>
     var LB_USER  = 'manipulative';
     var statusEl = document.getElementById('lb-status');
     var wrapEl   = document.getElementById('letterboxd-embed-wrapper-tc');
+    var carrot   = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 14" width="8" height="14" style="display:inline-block;vertical-align:-1px;margin:0 1px"><polygon points="1,4 7,4 5.5,13 2.5,13" fill="#f4913a"/><line x1="4" y1="4" x2="2" y2="1" stroke="#4a8840" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="4" x2="4" y2="0" stroke="#4a8840" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="4" x2="6" y2="1" stroke="#4a8840" stroke-width="1.5" stroke-linecap="round"/></svg>';
 
-    var fetchPromise = fetch('https://lb-embed-content.bokonon.dev?username=' + LB_USER);
-    var timeoutPromise = new Promise(function(_, reject) {
-      setTimeout(function() { reject(new Error('timeout')); }, 8000);
-    });
+    function render(html) {
+      statusEl.style.display = 'none';
+      wrapEl.innerHTML = html.replace(/★/g, carrot);
+      wrapEl.querySelectorAll('img').forEach(function(img) {
+        img.setAttribute('referrerpolicy', 'no-referrer');
+        var src = img.src; img.src = ''; img.src = src;
+      });
+    }
 
-    Promise.race([fetchPromise, timeoutPromise])
+    function showError() {
+      statusEl.innerHTML =
+        "couldn't load right now \u2014 " +
+        "<a href='https://letterboxd.com/" + LB_USER + "/films/diary/' target='_blank' rel='noopener'>view on letterboxd &rarr;</a>";
+    }
+
+    // load from cached file in this repo — fast, reliable, no external dependency
+    fetch('letterboxd-cache.html')
       .then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
+        if (!r.ok) throw new Error('cache not found');
         return r.text();
       })
       .then(function(html) {
-        if (!html || html.trim().length < 10) throw new Error('empty');
-        statusEl.style.display = 'none';
-        var carrot = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 14" width="8" height="14" style="display:inline-block;vertical-align:-1px;margin:0 1px"><polygon points="1,4 7,4 5.5,13 2.5,13" fill="#f4913a"/><line x1="4" y1="4" x2="2" y2="1" stroke="#4a8840" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="4" x2="4" y2="0" stroke="#4a8840" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="4" x2="6" y2="1" stroke="#4a8840" stroke-width="1.5" stroke-linecap="round"/></svg>';
-        wrapEl.innerHTML = html.replace(/★/g, carrot);
-        wrapEl.querySelectorAll('img').forEach(function(img) {
-          img.setAttribute('referrerpolicy', 'no-referrer');
-          var src = img.src;
-          img.src = '';
-          img.src = src;
-        });
+        if (!html || html.trim().length < 10) throw new Error('empty cache');
+        render(html);
       })
-      .catch(function(err) {
-        console.warn('[bunny garden]', err.message);
-        statusEl.innerHTML =
-          "couldn't load right now \u2014 " +
-          "<a href='http
+      .catch(function() {
+        // cache doesn't exist yet — fall back to live service
+        var live = fetch('https://lb-embed-content.bokonon.dev?username=' + LB_USER);
+        var timeout = new Promise(function(_, reject) {
+          setTimeout(function() { reject(new Error('timeout')); }, 8000);
+        });
+        Promise.race([live, timeout])
+          .then(function(r) { return r.text(); })
+          .then(function(html) { render(html); })
+          .catch(showError);
+      });
+  </script>
+</body>
+</html>
