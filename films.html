@@ -30,13 +30,7 @@
     a { color: var(--slate); text-underline-offset: 2px; }
     a:hover { color: var(--dark); }
     header { padding: 2.75rem 0 1.375rem; }
-    .site-title {
-      font-family: 'VT323', monospace;
-      font-size: 2.625rem;
-      color: var(--dark);
-      letter-spacing: 0.04em;
-      line-height: 1;
-    }
+    .site-title { font-family: 'VT323', monospace; font-size: 2.625rem; color: var(--dark); letter-spacing: 0.04em; line-height: 1; }
     .site-title a { text-decoration: none; color: inherit; }
     .dot { color: var(--purple); }
     nav { margin-top: 0.625rem; display: flex; flex-wrap: wrap; column-gap: 1.25rem; }
@@ -50,74 +44,30 @@
     .section-label::before { content: '> '; color: var(--purple); }
     .section-more { font-size: 0.8125rem; color: var(--muted); text-decoration: none; }
     .section-more:hover { color: var(--slate); }
-    footer {
-      padding: 1.75rem 0 3.5rem;
-      font-size: 0.8125rem;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
+    footer { padding: 1.75rem 0 3.5rem; font-size: 0.8125rem; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
     .footer-links { display: flex; gap: 1rem; }
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--dark); }
 
-    /* diary entries */
-    .film-entry {
-      display: flex;
-      gap: 0.875rem;
-      padding: 0.875rem 0;
-      border-bottom: 1px dotted var(--border);
-    }
+    /* diary */
+    .film-entry { display: flex; gap: 0.875rem; padding: 0.875rem 0; border-bottom: 1px dotted var(--border); }
     .film-entry:last-child { border-bottom: none; }
-
     .film-poster { flex-shrink: 0; width: 46px; }
-    .film-poster img {
-      width: 46px;
-      display: block;
-      border: 1px solid var(--border);
-    }
-    .film-poster-empty {
-      width: 46px;
-      height: 68px;
-      background: var(--blue-dim);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.6rem;
-      color: var(--muted);
-      text-align: center;
-    }
-
+    .film-poster img { width: 46px; display: block; border: 1px solid var(--border); }
+    .film-poster-empty { width: 46px; height: 68px; background: var(--blue-dim); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--muted); text-align: center; }
     .film-info { flex: 1; min-width: 0; }
-
     .film-title { color: var(--dark); font-weight: 700; text-decoration: none; }
     .film-title:hover { color: var(--slate); text-decoration: underline; }
     .film-year { color: var(--muted); font-size: 0.875rem; }
-    .film-rating { color: var(--purple); font-size: 1rem; margin-top: 0.1rem; letter-spacing: 0.01em; }
+    .film-rating { color: var(--purple); font-size: 1rem; margin-top: 0.1rem; }
     .film-date { font-size: 0.8125rem; color: var(--muted); }
-    .film-review { font-size: 0.875rem; font-style: italic; color: var(--dark); margin-top: 0.2rem; }
+    .film-review { font-size: 0.875rem; font-style: italic; margin-top: 0.2rem; }
 
     #diary-status { font-size: 0.9rem; color: var(--muted); padding: 0.25rem 0 0.75rem; }
-
-    #btn-more {
-      margin-top: 1rem;
-      font-family: 'Courier Prime', monospace;
-      font-size: 0.875rem;
-      color: var(--slate);
-      background: transparent;
-      border: 1px solid var(--border);
-      padding: 0.25rem 0.875rem;
-      cursor: pointer;
-      display: none;
-    }
+    #btn-more { margin-top: 1rem; font-family: 'Courier Prime', monospace; font-size: 0.875rem; color: var(--slate); background: transparent; border: 1px solid var(--border); padding: 0.25rem 0.875rem; cursor: pointer; display: none; }
     #btn-more:hover { background: var(--blue-dim); color: var(--dark); }
 
-    @media (max-width: 480px) {
-      .site-title { font-size: 2rem; }
-    }
+    @media (max-width: 480px) { .site-title { font-size: 2rem; } }
   </style>
 </head>
 <body>
@@ -143,7 +93,6 @@
         <span class="section-label">diary</span>
         <a class="section-more" href="https://letterboxd.com/manipulative/films/diary/" target="_blank" rel="noopener">letterboxd &rarr;</a>
       </div>
-
       <div id="diary-status">loading...</div>
       <div id="diary-list"></div>
       <button id="btn-more">+ show more</button>
@@ -161,117 +110,142 @@
     </footer>
 
   </div>
-
   <script>
-    const LB_USER    = 'manipulative';
-    const BATCH      = 10;
-    const FEED_URL   = 'https://letterboxd.com/' + LB_USER + '/rss/';
-    const PROXY_URL  = 'https://api.allorigins.win/get?url=' + encodeURIComponent(FEED_URL);
+    var LB_USER   = 'manipulative';
+    var BATCH     = 10;
+    var FEED      = 'https://letterboxd.com/' + LB_USER + '/rss/';
+    var PROXY     = 'https://api.allorigins.win/get?url=' + encodeURIComponent(FEED);
 
-    let allEntries = [];
-    let shown = 0;
+    var allEntries = [];
+    var shown = 0;
 
-    // get a letterboxd: namespaced field, with multiple fallbacks
-    function lbField(item, name) {
-      let el = item.getElementsByTagNameNS('https://letterboxd.com', name)[0]
-             || item.getElementsByTagName('letterboxd:' + name)[0]
-             || item.getElementsByTagName(name)[0];
-      return el ? el.textContent.trim() : '';
+    // safely get text from a tag, trying multiple approaches
+    function getText(parent, tagName) {
+      // try with letterboxd namespace
+      var ns = parent.getElementsByTagNameNS('https://letterboxd.com', tagName);
+      if (ns.length) return ns[0].textContent.trim();
+      // try prefixed
+      var pre = parent.getElementsByTagName('letterboxd:' + tagName);
+      if (pre.length) return pre[0].textContent.trim();
+      // try plain
+      var plain = parent.getElementsByTagName(tagName);
+      if (plain.length) return plain[0].textContent.trim();
+      return '';
     }
 
-    // numeric rating → star string
     function toStars(r) {
-      const n = parseFloat(r);
+      var n = parseFloat(r);
       if (!r || isNaN(n) || n <= 0) return '';
-      return '★'.repeat(Math.floor(n)) + (n % 1 >= 0.5 ? '½' : '');
+      var s = '';
+      for (var i = 0; i < Math.floor(n); i++) s += '\u2605';
+      if (n % 1 >= 0.5) s += '\u00BD';
+      return s;
     }
 
-    // "YYYY-MM-DD" → "8 Apr 2026"
     function fmtDate(s) {
       if (!s) return '';
-      const [y, m, d] = s.split('-').map(Number);
-      return d + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1] + ' ' + y;
+      var parts = s.split('-');
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return parseInt(parts[2], 10) + ' ' + months[parseInt(parts[1], 10) - 1] + ' ' + parts[0];
     }
 
-    // pull poster src from description HTML string
     function getPoster(html) {
-      const m = html.match(/src="([^"]+)"/);
+      var m = html.match(/src="([^"]+)"/);
       return m ? m[1] : null;
     }
 
-    // pull review text from description, strip tags, cap length
     function getReview(html) {
-      let t = html
+      var t = html
         .replace(/<img[^>]*>/gi, '')
-        .replace(/<p>Watched[^<]*<\/p>/gi, '')
+        .replace(/<p>\s*Watched[^<]*<\/p>/gi, '')
         .replace(/<[^>]+>/g, '')
         .trim();
-      return t.length > 180 ? t.slice(0, 180).trimEnd() + '…' : t;
+      if (t.length > 200) t = t.slice(0, 200).trimRight() + '\u2026';
+      return t;
     }
 
-    function makeEntryEl(e) {
-      const wrap = document.createElement('div');
-      wrap.className = 'film-entry';
+    function makeCard(e) {
+      var div = document.createElement('div');
+      div.className = 'film-entry';
 
-      const posterEl = e.poster
-        ? '<img src="' + e.poster + '" alt="' + e.title.replace(/"/g,'') + '" loading="lazy">'
-        : '<div class="film-poster-empty">no img</div>';
+      var poster = e.poster
+        ? '<img src="' + e.poster + '" alt="" loading="lazy">'
+        : '<div class="film-poster-empty">no<br>img</div>';
 
-      wrap.innerHTML =
-        '<div class="film-poster"><a href="' + e.link + '" target="_blank" rel="noopener">' + posterEl + '</a></div>' +
+      div.innerHTML =
+        '<div class="film-poster"><a href="' + e.link + '" target="_blank" rel="noopener">' + poster + '</a></div>' +
         '<div class="film-info">' +
-          '<div><a class="film-title" href="' + e.link + '" target="_blank" rel="noopener">' + e.title + '</a>' +
-          (e.year ? ' <span class="film-year">(' + e.year + ')</span>' : '') + '</div>' +
+          '<div>' +
+            '<a class="film-title" href="' + e.link + '" target="_blank" rel="noopener">' + e.title + '</a>' +
+            (e.year ? ' <span class="film-year">(' + e.year + ')</span>' : '') +
+          '</div>' +
           (e.stars ? '<div class="film-rating">' + e.stars + '</div>' : '') +
-          '<div class="film-date">watched ' + e.date + '</div>' +
+          (e.date  ? '<div class="film-date">watched ' + e.date + '</div>' : '') +
           (e.review ? '<div class="film-review">' + e.review + '</div>' : '') +
         '</div>';
 
-      return wrap;
+      return div;
     }
 
     function showBatch() {
-      const list = document.getElementById('diary-list');
-      const next = allEntries.slice(shown, shown + BATCH);
-      next.forEach(e => list.appendChild(makeEntryEl(e)));
-      shown += next.length;
+      var list  = document.getElementById('diary-list');
+      var slice = allEntries.slice(shown, shown + BATCH);
+      slice.forEach(function(e) { list.appendChild(makeCard(e)); });
+      shown += slice.length;
       document.getElementById('btn-more').style.display =
         shown < allEntries.length ? 'inline-block' : 'none';
     }
 
-    async function load() {
-      const status = document.getElementById('diary-status');
-      try {
-        const res  = await fetch(PROXY_URL);
-        const json = await res.json();
-        const xml  = new DOMParser().parseFromString(json.contents, 'text/xml');
-        const items = Array.from(xml.querySelectorAll('item'));
+    function load() {
+      var statusEl = document.getElementById('diary-status');
 
-        if (!items.length) {
-          status.textContent = 'no entries found.';
-          return;
-        }
+      fetch(PROXY)
+        .then(function(res) {
+          if (!res.ok) throw new Error('proxy returned ' + res.status);
+          return res.json();
+        })
+        .then(function(json) {
+          if (!json || !json.contents) throw new Error('proxy returned empty contents');
 
-        allEntries = items.map(item => {
-          const desc = item.querySelector('description')?.textContent || '';
-          return {
-            title:  lbField(item, 'filmTitle') || (item.querySelector('title')?.textContent || '').split(',')[0],
-            year:   lbField(item, 'filmYear'),
-            stars:  toStars(lbField(item, 'memberRating')),
-            date:   fmtDate(lbField(item, 'watchedDate')),
-            link:   (item.querySelector('link')?.textContent || '#').trim(),
-            poster: getPoster(desc),
-            review: getReview(desc),
-          };
+          var xmlText = json.contents;
+          var parser  = new DOMParser();
+          var doc     = parser.parseFromString(xmlText, 'text/xml');
+
+          // DOMParser doesn't throw — check for a parsererror element
+          var errEl = doc.getElementsByTagName('parsererror');
+          if (errEl.length > 0) throw new Error('XML parse error: ' + errEl[0].textContent.slice(0, 120));
+
+          // getElementsByTagName works reliably on XML documents
+          var items = doc.getElementsByTagName('item');
+          if (!items.length) throw new Error('feed parsed ok but contained 0 items');
+
+          for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var desc = getText(item, 'description');
+            // <link> in RSS 2.0 is a text node; nextSibling trick avoids HTML <link> confusion
+            var linkEl   = item.getElementsByTagName('link')[0];
+            var linkHref = linkEl ? (linkEl.textContent || linkEl.getAttribute('href') || '#').trim() : '#';
+
+            allEntries.push({
+              title:  getText(item, 'filmTitle') || getText(item, 'title').split(',')[0],
+              year:   getText(item, 'filmYear'),
+              stars:  toStars(getText(item, 'memberRating')),
+              date:   fmtDate(getText(item, 'watchedDate')),
+              link:   linkHref,
+              poster: getPoster(desc),
+              review: getReview(desc),
+            });
+          }
+
+          statusEl.style.display = 'none';
+          showBatch();
+        })
+        .catch(function(err) {
+          console.error('[bunny garden] letterboxd error:', err.message);
+          statusEl.innerHTML =
+            "couldn't load right now \u2014 " +
+            "<a href='https://letterboxd.com/" + LB_USER + "/films/diary/' target='_blank' rel='noopener'>view on letterboxd &rarr;</a>";
         });
-
-        status.style.display = 'none';
-        showBatch();
-
-      } catch (err) {
-        status.innerHTML = "couldn't load right now. <a href='https://letterboxd.com/" + LB_USER + "/films/diary/' target='_blank'>view on letterboxd &rarr;</a>";
-        console.error(err);
-      }
     }
 
     document.getElementById('btn-more').addEventListener('click', showBatch);
