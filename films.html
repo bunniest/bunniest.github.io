@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>films – bunny garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #f1f6f8;
+      --dark:     #21273d;
+      --slate:    #6a759b;
+      --blue:     #b9d4f1;
+      --blue-dim: rgba(185,212,241,0.15);
+      --purple:   #8c7dc0;
+      --muted:    #7a87a8;
+      --border:   #c4d6e8;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .page { max-width: 640px; margin: 0 auto; padding: 0 1.5rem; }
+    a { color: var(--slate); text-underline-offset: 2px; }
+    a:hover { color: var(--dark); }
+    header { padding: 2.75rem 0 1.375rem; }
+    .site-title {
+      font-family: 'VT323', monospace;
+      font-size: 2.625rem;
+      color: var(--dark);
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+    .site-title a { text-decoration: none; color: inherit; }
+    .dot { color: var(--purple); }
+    nav { margin-top: 0.625rem; display: flex; flex-wrap: wrap; column-gap: 1.25rem; }
+    nav a { font-size: 0.875rem; color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--dark); text-decoration: underline; }
+    nav a.active { color: var(--slate); text-decoration: underline; }
+    .rule { border: none; border-top: 1px dashed var(--border); margin: 0; }
+    .section { padding: 1.75rem 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; }
+    .section-label { font-family: 'VT323', monospace; font-size: 1.375rem; color: var(--slate); letter-spacing: 0.04em; }
+    .section-label::before { content: '> '; color: var(--purple); }
+    .section-more { font-size: 0.8125rem; color: var(--muted); text-decoration: none; }
+    .section-more:hover { color: var(--slate); }
+    footer {
+      padding: 1.75rem 0 3.5rem;
+      font-size: 0.8125rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .footer-links { display: flex; gap: 1rem; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--dark); }
+
+    /* diary entries */
+    .film-entry {
+      display: flex;
+      gap: 0.875rem;
+      padding: 0.875rem 0;
+      border-bottom: 1px dotted var(--border);
+    }
+    .film-entry:last-child { border-bottom: none; }
+
+    .film-poster { flex-shrink: 0; width: 46px; }
+    .film-poster img {
+      width: 46px;
+      display: block;
+      border: 1px solid var(--border);
+    }
+    .film-poster-empty {
+      width: 46px;
+      height: 68px;
+      background: var(--blue-dim);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .film-info { flex: 1; min-width: 0; }
+
+    .film-title { color: var(--dark); font-weight: 700; text-decoration: none; }
+    .film-title:hover { color: var(--slate); text-decoration: underline; }
+    .film-year { color: var(--muted); font-size: 0.875rem; }
+    .film-rating { color: var(--purple); font-size: 1rem; margin-top: 0.1rem; letter-spacing: 0.01em; }
+    .film-date { font-size: 0.8125rem; color: var(--muted); }
+    .film-review { font-size: 0.875rem; font-style: italic; color: var(--dark); margin-top: 0.2rem; }
+
+    #diary-status { font-size: 0.9rem; color: var(--muted); padding: 0.25rem 0 0.75rem; }
+
+    #btn-more {
+      margin-top: 1rem;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.875rem;
+      color: var(--slate);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.875rem;
+      cursor: pointer;
+      display: none;
+    }
+    #btn-more:hover { background: var(--blue-dim); color: var(--dark); }
+
+    @media (max-width: 480px) {
+      .site-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header>
+      <div class="site-title"><a href="index.html">bunny garden<span class="dot">.</span></a></div>
+      <nav>
+        <a href="about.html">about</a>
+        <a href="now.html">now</a>
+        <a href="films.html" class="active">films</a>
+        <a href="garden.html">garden</a>
+        <a href="guestbook.html">guestbook</a>
+        <a href="archive.html">all posts</a>
+        <a href="feed.xml">rss</a>
+      </nav>
+    </header>
+
+    <hr class="rule">
+
+    <div class="section">
+      <div class="section-head">
+        <span class="section-label">diary</span>
+        <a class="section-more" href="https://letterboxd.com/manipulative/films/diary/" target="_blank" rel="noopener">letterboxd &rarr;</a>
+      </div>
+
+      <div id="diary-status">loading...</div>
+      <div id="diary-list"></div>
+      <button id="btn-more">+ show more</button>
+    </div>
+
+    <hr class="rule">
+
+    <footer>
+      <div class="footer-links">
+        <a href="mailto:you@email.com">contact</a>
+        <a href="guestbook.html">guestbook</a>
+        <a href="feed.xml">rss</a>
+      </div>
+      <span>made with &#9825;</span>
+    </footer>
+
+  </div>
+
+  <script>
+    const LB_USER    = 'manipulative';
+    const BATCH      = 10;
+    const FEED_URL   = 'https://letterboxd.com/' + LB_USER + '/rss/';
+    const PROXY_URL  = 'https://api.allorigins.win/get?url=' + encodeURIComponent(FEED_URL);
+
+    let allEntries = [];
+    let shown = 0;
+
+    // get a letterboxd: namespaced field, with multiple fallbacks
+    function lbField(item, name) {
+      let el = item.getElementsByTagNameNS('https://letterboxd.com', name)[0]
+             || item.getElementsByTagName('letterboxd:' + name)[0]
+             || item.getElementsByTagName(name)[0];
+      return el ? el.textContent.trim() : '';
+    }
+
+    // numeric rating → star string
+    function toStars(r) {
+      const n = parseFloat(r);
+      if (!r || isNaN(n) || n <= 0) return '';
+      return '★'.repeat(Math.floor(n)) + (n % 1 >= 0.5 ? '½' : '');
+    }
+
+    // "YYYY-MM-DD" → "8 Apr 2026"
+    function fmtDate(s) {
+      if (!s) return '';
+      const [y, m, d] = s.split('-').map(Number);
+      return d + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1] + ' ' + y;
+    }
+
+    // pull poster src from description HTML string
+    function getPoster(html) {
+      const m = html.match(/src="([^"]+)"/);
+      return m ? m[1] : null;
+    }
+
+    // pull review text from description, strip tags, cap length
+    function getReview(html) {
+      let t = html
+        .replace(/<img[^>]*>/gi, '')
+        .replace(/<p>Watched[^<]*<\/p>/gi, '')
+        .replace(/<[^>]+>/g, '')
+        .trim();
+      return t.length > 180 ? t.slice(0, 180).trimEnd() + '…' : t;
+    }
+
+    function makeEntryEl(e) {
+      const wrap = document.createElement('div');
+      wrap.className = 'film-entry';
+
+      const posterEl = e.poster
+        ? '<img src="' + e.poster + '" alt="' + e.title.replace(/"/g,'') + '" loading="lazy">'
+        : '<div class="film-poster-empty">no img</div>';
+
+      wrap.innerHTML =
+        '<div class="film-poster"><a href="' + e.link + '" target="_blank" rel="noopener">' + posterEl + '</a></div>' +
+        '<div class="film-info">' +
+          '<div><a class="film-title" href="' + e.link + '" target="_blank" rel="noopener">' + e.title + '</a>' +
+          (e.year ? ' <span class="film-year">(' + e.year + ')</span>' : '') + '</div>' +
+          (e.stars ? '<div class="film-rating">' + e.stars + '</div>' : '') +
+          '<div class="film-date">watched ' + e.date + '</div>' +
+          (e.review ? '<div class="film-review">' + e.review + '</div>' : '') +
+        '</div>';
+
+      return wrap;
+    }
+
+    function showBatch() {
+      const list = document.getElementById('diary-list');
+      const next = allEntries.slice(shown, shown + BATCH);
+      next.forEach(e => list.appendChild(makeEntryEl(e)));
+      shown += next.length;
+      document.getElementById('btn-more').style.display =
+        shown < allEntries.length ? 'inline-block' : 'none';
+    }
+
+    async function load() {
+      const status = document.getElementById('diary-status');
+      try {
+        const res  = await fetch(PROXY_URL);
+        const json = await res.json();
+        const xml  = new DOMParser().parseFromString(json.contents, 'text/xml');
+        const items = Array.from(xml.querySelectorAll('item'));
+
+        if (!items.length) {
+          status.textContent = 'no entries found.';
+          return;
+        }
+
+        allEntries = items.map(item => {
+          const desc = item.querySelector('description')?.textContent || '';
+          return {
+            title:  lbField(item, 'filmTitle') || (item.querySelector('title')?.textContent || '').split(',')[0],
+            year:   lbField(item, 'filmYear'),
+            stars:  toStars(lbField(item, 'memberRating')),
+            date:   fmtDate(lbField(item, 'watchedDate')),
+            link:   (item.querySelector('link')?.textContent || '#').trim(),
+            poster: getPoster(desc),
+            review: getReview(desc),
+          };
+        });
+
+        status.style.display = 'none';
+        showBatch();
+
+      } catch (err) {
+        status.innerHTML = "couldn't load right now. <a href='https://letterboxd.com/" + LB_USER + "/films/diary/' target='_blank'>view on letterboxd &rarr;</a>";
+        console.error(err);
+      }
+    }
+
+    document.getElementById('btn-more').addEventListener('click', showBatch);
+    load();
+  </script>
+</body>
+</html>

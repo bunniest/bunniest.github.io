@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bunny garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #f1f6f8;
+      --dark:     #21273d;
+      --slate:    #6a759b;
+      --blue:     #b9d4f1;
+      --blue-dim: rgba(185,212,241,0.15);
+      --purple:   #8c7dc0;
+      --muted:    #7a87a8;
+      --border:   #c4d6e8;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .page { max-width: 640px; margin: 0 auto; padding: 0 1.5rem; }
+    a { color: var(--slate); text-underline-offset: 2px; }
+    a:hover { color: var(--dark); }
+    header { padding: 2.75rem 0 1.375rem; }
+    .site-title {
+      font-family: 'VT323', monospace;
+      font-size: 2.625rem;
+      color: var(--dark);
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+    .site-title a { text-decoration: none; color: inherit; }
+    .dot { color: var(--purple); }
+    nav { margin-top: 0.625rem; display: flex; flex-wrap: wrap; column-gap: 1.25rem; }
+    nav a { font-size: 0.875rem; color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--dark); text-decoration: underline; }
+    nav a.active { color: var(--slate); text-decoration: underline; }
+    .rule { border: none; border-top: 1px dashed var(--border); margin: 0; }
+    .section { padding: 1.75rem 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; }
+    .section-label { font-family: 'VT323', monospace; font-size: 1.375rem; color: var(--slate); letter-spacing: 0.04em; }
+    .section-label::before { content: '> '; color: var(--purple); }
+    .section-more { font-size: 0.8125rem; color: var(--muted); text-decoration: none; }
+    .section-more:hover { color: var(--slate); }
+    .post-list { list-style: none; }
+    .post-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 0.45rem 0;
+      border-bottom: 1px dotted var(--border);
+    }
+    .post-item:last-child { border-bottom: none; }
+    .post-title { color: var(--dark); text-decoration: none; font-size: 0.9375rem; }
+    .post-title:hover { color: var(--slate); text-decoration: underline; }
+    .post-date { font-size: 0.8125rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+    .note { border-left: 2px solid var(--blue); padding: 0.75rem 1.125rem; background: var(--blue-dim); font-size: 0.9375rem; }
+    .note p + p { margin-top: 0.5rem; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+    .tag {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border: 1px solid var(--border);
+      color: var(--slate);
+      font-size: 0.8125rem;
+      font-family: 'Courier Prime', monospace;
+      text-decoration: none;
+    }
+    .tag:hover { background: var(--blue); color: var(--dark); text-decoration: none; }
+    footer {
+      padding: 1.75rem 0 3.5rem;
+      font-size: 0.8125rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .footer-links { display: flex; gap: 1rem; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--dark); }
+    @media (max-width: 480px) {
+      .site-title { font-size: 2rem; }
+      .post-item { flex-direction: column; gap: 0.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header>
+      <div class="site-title"><a href="index.html">bunny garden<span class="dot">.</span></a></div>
+      <nav>
+        <a href="about.html">about</a>
+        <a href="now.html">now</a>
+        <a href="films.html">films</a>
+        <a href="garden.html">garden</a>
+        <a href="guestbook.html">guestbook</a>
+        <a href="archive.html">all posts</a>
+        <a href="feed.xml">rss</a>
+      </nav>
+    </header>
+
+    <hr class="rule">
+
+    <div class="section">
+      <p style="font-family:'VT323',monospace;font-size:1.25rem;color:var(--muted);margin-bottom:0.875rem;">* hi! welcome to bunny garden *</p>
+      <p>i write about <a href="archive.html">[your topics here]</a> — and whatever else is on my mind.</p>
+      <p style="margin-top:0.5rem;">feel free to look around :) not sure what this is? <a href="about.html">start here.</a></p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="section">
+      <div class="section-head">
+        <span class="section-label">latest</span>
+        <a class="section-more" href="archive.html">all posts &rarr;</a>
+      </div>
+      <ul class="post-list">
+        <li class="post-item">
+          <a class="post-title" href="#">post title goes here</a>
+          <span class="post-date">Apr 10, 2026</span>
+        </li>
+        <li class="post-item">
+          <a class="post-title" href="#">another thing i wrote about</a>
+          <span class="post-date">Apr 3, 2026</span>
+        </li>
+        <li class="post-item">
+          <a class="post-title" href="#">one more post</a>
+          <span class="post-date">Mar 28, 2026</span>
+        </li>
+        <li class="post-item">
+          <a class="post-title" href="#">something i've been thinking about</a>
+          <span class="post-date">Mar 19, 2026</span>
+        </li>
+      </ul>
+    </div>
+
+    <hr class="rule">
+
+    <div class="section">
+      <div class="section-head"><span class="section-label">about this place</span></div>
+      <div class="note">
+        <p>this is my little corner of the internet. i use it to think out loud, share things i love, and keep notes on what i'm <a href="now.html">up to lately</a>.</p>
+        <p>if you have a blog too, say hi in the <a href="guestbook.html">guestbook</a>! &#9825;</p>
+      </div>
+    </div>
+
+    <hr class="rule">
+
+    <div class="section">
+      <div class="section-head">
+        <span class="section-label">garden</span>
+        <a class="section-more" href="garden.html">explore &rarr;</a>
+      </div>
+      <div class="tag-list">
+        <a class="tag" href="garden.html">#topic-a</a>
+        <a class="tag" href="garden.html">#topic-b</a>
+        <a class="tag" href="garden.html">#topic-c</a>
+        <a class="tag" href="garden.html">#topic-d</a>
+        <a class="tag" href="garden.html">#topic-e</a>
+      </div>
+    </div>
+
+    <hr class="rule">
+
+    <footer>
+      <div class="footer-links">
+        <a href="mailto:you@email.com">contact</a>
+        <a href="guestbook.html">guestbook</a>
+        <a href="feed.xml">rss</a>
+      </div>
+      <span>made with &#9825;</span>
+    </footer>
+
+  </div>
+</body>
+</html>
