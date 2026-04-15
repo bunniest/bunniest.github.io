@@ -52,7 +52,8 @@
     #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-rating { color: var(--purple) !important; font-size: 1rem !important; }
     #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-footer { display: none !important; }
     #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-poster img { width: 52px !important; height: auto !important; display: block !important; border: 1px solid var(--border) !important; flex-shrink: 0 !important; }
-    #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-rating img { width: 10px !important; height: 16px !important; border: none !important; display: inline-block !important; }
+    /* FIXED: added filter to recolour any leftover carrot images to purple */
+    #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-rating img { width: 10px !important; height: 16px !important; border: none !important; display: inline-block !important; filter: brightness(0) invert(62%) sepia(30%) saturate(600%) hue-rotate(210deg) !important; }
     #letterboxd-embed-wrapper-tc a { color: var(--dark) !important; text-decoration: none !important; font-weight: 700 !important; }
     #letterboxd-embed-wrapper-tc a:hover { color: var(--slate) !important; text-decoration: underline !important; }
     #letterboxd-embed-wrapper-tc p { font-size: 0.875rem !important; font-style: italic !important; color: var(--muted) !important; font-weight: 400 !important; margin-top: 0.3rem !important; line-height: 1.55 !important; display: -webkit-box !important; -webkit-line-clamp: 3 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
@@ -103,11 +104,25 @@
 
     function render(html) {
       statusEl.style.display = 'none';
-      // replace plain stars (from live service)
+
+      // replace plain star characters (from live service)
       html = html.replace(/★/g, PURPLE_CARROT);
-      // replace old orange/green SVG carrots already in cache
-      html = html.replace(/<svg[^>]*viewBox="0 0 8 14"[^>]*>[\s\S]*?<\/svg>/g, PURPLE_CARROT);
+
+      // FIXED: replace any small inline SVG (not just viewBox "0 0 8 14")
+      // length < 600 ensures we only swap out tiny rating SVGs, not larger ones
+      html = html.replace(/<svg[^>]*>[\s\S]*?<\/svg>/g, function(m) {
+        return m.length < 600 ? PURPLE_CARROT : m;
+      });
+
       wrapEl.innerHTML = html;
+
+      // FIXED: post-render sweep — catch any rating <img> tags that slipped through
+      wrapEl.querySelectorAll('.letterboxd-embed-tc-rating img').forEach(function(img) {
+        var span = document.createElement('span');
+        span.innerHTML = PURPLE_CARROT;
+        img.replaceWith(span.firstChild);
+      });
+
       // fix letterboxd poster images
       wrapEl.querySelectorAll('img').forEach(function(img) {
         if (img.src.indexOf('ltrbxd') !== -1 || img.src.indexOf('letterboxd') !== -1) {
