@@ -52,10 +52,9 @@
     #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-rating { color: var(--purple) !important; font-size: 1rem !important; }
     #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-footer { display: none !important; }
     #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-poster img { width: 52px !important; height: auto !important; display: block !important; border: 1px solid var(--border) !important; flex-shrink: 0 !important; }
-    #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-rating img { width: 16px !important; height: 16px !important; border: none !important; display: inline-block !important; }
+    #letterboxd-embed-wrapper-tc .letterboxd-embed-tc-rating img { width: 10px !important; height: 16px !important; border: none !important; display: inline-block !important; }
     #letterboxd-embed-wrapper-tc a { color: var(--dark) !important; text-decoration: none !important; font-weight: 700 !important; }
     #letterboxd-embed-wrapper-tc a:hover { color: var(--slate) !important; text-decoration: underline !important; }
-    #letterboxd-embed-wrapper-tc [class*="star"], #letterboxd-embed-wrapper-tc [class*="rating"] { color: var(--purple) !important; background: transparent !important; }
     #letterboxd-embed-wrapper-tc p { font-size: 0.875rem !important; font-style: italic !important; color: var(--muted) !important; font-weight: 400 !important; margin-top: 0.3rem !important; line-height: 1.55 !important; display: -webkit-box !important; -webkit-line-clamp: 3 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
     #letterboxd-embed-wrapper-tc time, #letterboxd-embed-wrapper-tc [class*="date"], #letterboxd-embed-wrapper-tc small { font-size: 0.875rem !important; color: var(--muted) !important; font-weight: 400 !important; }
     #letterboxd-embed-wrapper-tc [class*="footer"], #letterboxd-embed-wrapper-tc [class*="brand"], #letterboxd-embed-wrapper-tc [class*="powered"] { display: none !important; }
@@ -89,30 +88,33 @@
     <hr class="rule">
     <footer>
       <div class="footer-links">
-        <a href="/cdn-cgi/l/email-protection#1f66706a5f7a727e7673317c7072">contact</a>
+        <a href="mailto:you@email.com">contact</a>
         <a href="guestbook.html">guestbook</a>
         <a href="feed.xml">rss</a>
       </div>
       <span>made with &#9825;</span>
     </footer>
   </div>
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script>
+  <script>
     var LB_USER  = 'manipulative';
     var statusEl = document.getElementById('lb-status');
     var wrapEl   = document.getElementById('letterboxd-embed-wrapper-tc');
+    var PURPLE_CARROT = '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 10 16\'%3E%3Cpolygon points=\'2,6 8,6 6.5,15 3.5,15\' fill=\'%238c7dc0\'/%3E%3Crect x=\'4\' y=\'1\' width=\'2\' height=\'5\' fill=\'%238c7dc0\'/%3E%3Cpolygon points=\'1,4 5,6 3,8\' fill=\'%238c7dc0\'/%3E%3Cpolygon points=\'9,4 5,6 7,8\' fill=\'%238c7dc0\'/%3E%3C/svg%3E" style="display:inline-block;width:10px;height:16px;vertical-align:-3px;margin:0 1px;image-rendering:pixelated" alt="carrot">';
 
     function render(html) {
       statusEl.style.display = 'none';
-      var purpleCarrot = '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 10 16\'%3E%3Cpolygon points=\'2,6 8,6 6.5,15 3.5,15\' fill=\'%238c7dc0\'/%3E%3Crect x=\'4\' y=\'1\' width=\'2\' height=\'5\' fill=\'%238c7dc0\'/%3E%3Cpolygon points=\'1,4 5,6 3,8\' fill=\'%238c7dc0\'/%3E%3Cpolygon points=\'9,4 5,6 7,8\' fill=\'%238c7dc0\'/%3E%3C/svg%3E" style="display:inline-block;width:10px;height:16px;vertical-align:-3px;margin:0 1px;image-rendering:pixelated" alt="carrot">';
-      // replace plain stars (live service)
-      html = html.replace(/★/g, purpleCarrot);
-      // replace old orange/green SVG carrots already baked into cache
-      html = html.replace(/<svg[^>]*viewBox="0 0 8 14"[^>]*>[\s\S]*?<\/svg>/g, purpleCarrot);
+      // replace plain stars (from live service)
+      html = html.replace(/★/g, PURPLE_CARROT);
+      // replace old orange/green SVG carrots already in cache
+      html = html.replace(/<svg[^>]*viewBox="0 0 8 14"[^>]*>[\s\S]*?<\/svg>/g, PURPLE_CARROT);
       wrapEl.innerHTML = html;
+      // fix letterboxd poster images
       wrapEl.querySelectorAll('img').forEach(function(img) {
         if (img.src.indexOf('ltrbxd') !== -1 || img.src.indexOf('letterboxd') !== -1) {
           img.setAttribute('referrerpolicy', 'no-referrer');
-          var src = img.src; img.src = ''; img.src = src;
+          var src = img.src;
+          img.src = '';
+          img.src = src;
         }
       });
     }
@@ -123,7 +125,6 @@
         "<a href='https://letterboxd.com/" + LB_USER + "/films/diary/' target='_blank' rel='noopener'>view on letterboxd &rarr;</a>";
     }
 
-    // load from cached file in this repo — fast, reliable, no external dependency
     fetch('letterboxd-cache.html')
       .then(function(r) {
         if (!r.ok) throw new Error('cache not found');
@@ -134,10 +135,15 @@
         render(html);
       })
       .catch(function() {
-        // cache doesn't exist yet — fall back to live service
         var live = fetch('https://lb-embed-content.bokonon.dev?username=' + LB_USER);
         var timeout = new Promise(function(_, reject) {
           setTimeout(function() { reject(new Error('timeout')); }, 8000);
         });
         Promise.race([live, timeout])
-          .then(f
+          .then(function(r) { return r.text(); })
+          .then(function(html) { render(html); })
+          .catch(showError);
+      });
+  </script>
+</body>
+</html>
