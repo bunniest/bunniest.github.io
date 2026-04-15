@@ -100,11 +100,15 @@
     var LB_USER  = 'manipulative';
     var statusEl = document.getElementById('lb-status');
     var wrapEl   = document.getElementById('letterboxd-embed-wrapper-tc');
-    var carrot = '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 10 16\'%3E%3Cpolygon points=\'2,6 8,6 6.5,15 3.5,15\' fill=\'%238c7dc0\'/%3E%3Crect x=\'4\' y=\'1\' width=\'2\' height=\'5\' fill=\'%238c7dc0\'/%3E%3Cpolygon points=\'1,4 5,6 3,8\' fill=\'%238c7dc0\'/%3E%3Cpolygon points=\'9,4 5,6 7,8\' fill=\'%238c7dc0\'/%3E%3C/svg%3E" style="display:inline-block;width:10px;height:16px;vertical-align:-3px;margin:0 1px;image-rendering:pixelated" alt="carrot">';
 
     function render(html) {
       statusEl.style.display = 'none';
-      wrapEl.innerHTML = html.replace(/★/g, carrot);
+      var purpleCarrot = '<img src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 10 16\'%3E%3Cpolygon points=\'2,6 8,6 6.5,15 3.5,15\' fill=\'%238c7dc0\'/%3E%3Crect x=\'4\' y=\'1\' width=\'2\' height=\'5\' fill=\'%238c7dc0\'/%3E%3Cpolygon points=\'1,4 5,6 3,8\' fill=\'%238c7dc0\'/%3E%3Cpolygon points=\'9,4 5,6 7,8\' fill=\'%238c7dc0\'/%3E%3C/svg%3E" style="display:inline-block;width:10px;height:16px;vertical-align:-3px;margin:0 1px;image-rendering:pixelated" alt="carrot">';
+      // replace plain stars (live service)
+      html = html.replace(/★/g, purpleCarrot);
+      // replace old orange/green SVG carrots already baked into cache
+      html = html.replace(/<svg[^>]*viewBox="0 0 8 14"[^>]*>[\s\S]*?<\/svg>/g, purpleCarrot);
+      wrapEl.innerHTML = html;
       wrapEl.querySelectorAll('img').forEach(function(img) {
         if (img.src.indexOf('ltrbxd') !== -1 || img.src.indexOf('letterboxd') !== -1) {
           img.setAttribute('referrerpolicy', 'no-referrer');
