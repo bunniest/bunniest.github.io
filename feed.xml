@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bunny garden</title>
+    <link>https://bunniest.github.io</link>
+    <description>thoughts, films, and whatever else lands here.</description>
+    <language>en</language>
+    <atom:link href="https://bunniest.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <!-- ═══════════════════════════════════
+         add new posts here (newest first).
+         copy the template below and fill in:
+         ═══════════════════════════════════ -->
+
+    <!-- TEMPLATE:
+    <item>
+      <title>your post title</title>
+      <link>https://bunniest.github.io/posts/your-slug.html</link>
+      <description>a short description or excerpt</description>
+      <pubDate>Sun, 20 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>https://bunniest.github.io/posts/your-slug.html</guid>
+    </item>
+    -->
+
+  </channel>
+</rss>
