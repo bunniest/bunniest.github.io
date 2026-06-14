@@ -3,135 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>bunny garden</title>
+  <title>love is heavenly — a midnight sanctuary</title>
+  <meta name="description" content="a cozy, candlelit personal sanctuary for writing, memory, music, and quiet midnight reflection.">
+  <meta name="color-scheme" content="dark">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f1f6f8; --dark: #21273d; --slate: #6a759b; --blue: #b9d4f1;
-      --blue-dim: rgba(185,212,241,0.15); --purple: #8c7dc0; --muted: #7a87a8; --border: #c4d6e8;
-    }
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--bg); color: var(--dark); font-family: 'Courier Prime', 'Courier New', monospace; font-size: 17px; line-height: 1.8; }
-    .page { max-width: 680px; margin: 0 auto; padding: 0 1.75rem; }
-    a { color: var(--slate); text-underline-offset: 3px; }
-    a:hover { color: var(--dark); }
-    header { padding: 2.75rem 0 1.5rem; }
-    .site-title { font-family: 'VT323', monospace; font-size: 3rem; color: var(--dark); letter-spacing: 0.04em; line-height: 1; }
-    .site-title a { text-decoration: none; color: inherit; }
-    .dot { color: var(--purple); }
-    nav { margin-top: 0.75rem; display: flex; flex-wrap: wrap; column-gap: 1.375rem; }
-    nav a { font-size: 0.9375rem; color: var(--muted); text-decoration: none; }
-    nav a:hover { color: var(--dark); text-decoration: underline; }
-    nav a.active { color: var(--slate); text-decoration: underline; }
-    .rule { border: none; border-top: 1px dashed var(--border); margin: 0; }
-    .section { padding: 1.875rem 0; }
-    .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.125rem; }
-    .section-label { font-family: 'VT323', monospace; font-size: 1.5rem; color: var(--slate); letter-spacing: 0.04em; }
-    .section-label::before { content: '> '; color: var(--purple); }
-    .section-more { font-size: 0.875rem; color: var(--muted); text-decoration: none; }
-    .section-more:hover { color: var(--slate); }
-    .post-list { list-style: none; }
-    .post-item { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px dotted var(--border); }
-    .post-item:last-child { border-bottom: none; }
-    .post-title { color: var(--dark); text-decoration: none; font-size: 1rem; }
-    .post-title:hover { color: var(--slate); text-decoration: underline; }
-    .post-date { font-size: 0.875rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
-    .note { border-left: 2px solid var(--blue); padding: 0.75rem 1.25rem; background: var(--blue-dim); font-size: 1rem; }
-    .note p + p { margin-top: 0.5rem; }
-    footer { padding: 1.875rem 0 3.5rem; font-size: 0.875rem; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
-    .footer-links { display: flex; gap: 1rem; }
-    footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--dark); }
-    .empty-msg { font-size: 0.9375rem; color: var(--muted); font-style: italic; }
-    @media (max-width: 500px) { .site-title { font-size: 2.25rem; } .post-item { flex-direction: column; gap: 0.1rem; } }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=EB+Garamond:ital@0;1&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/heavenly.css">
 </head>
 <body>
-  <div class="page">
+  <a class="skip-link" href="#main">skip to content</a>
+  <header class="shell site-header" data-chrome="header"></header>
 
-    <header>
-      <div class="site-title"><a href="index.html">bunny garden<span class="dot">.</span></a></div>
-      <nav>
-        <a href="about.html">about</a>
-        <a href="now.html">now</a>
-        <a href="films.html">films</a>
-        <a href="garden.html">garden</a>
-        <a href="guestbook.html">guestbook</a>
-        <a href="archive.html">all posts</a>
-        <a href="feed.xml">rss</a>
+  <main id="main" class="shell">
+
+    <section class="hero section">
+      <p class="eyebrow">welcome, night-wanderer</p>
+      <p class="welcome">
+        come in from the dark a while. it's <em>midnight</em> here, always —
+        the candle is lit, the record is turning, and there's a soft place
+        kept just for you.
+      </p>
+    </section>
+
+    <div class="divider-star" aria-hidden="true"></div>
+
+    <section class="section">
+      <div id="featured-entry"></div>
+    </section>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <section class="section">
+      <p class="eyebrow center">wander where you like</p>
+      <p class="lede center" style="margin:0.4rem auto 1.6rem;max-width:34rem;">
+        every room here is small and warm. stay as long as the song lasts.
+      </p>
+      <nav class="journal-grid" aria-label="rooms of the sanctuary">
+        <a class="card" href="journal.html" style="text-decoration:none;">
+          <div class="eyebrow">the journal</div>
+          <p class="muted">handwritten nights, tagged by feeling.</p>
+        </a>
+        <a class="card" href="garden.html" style="text-decoration:none;">
+          <div class="eyebrow">memory garden</div>
+          <p class="muted">keepsakes that glow when you hold them.</p>
+        </a>
+        <a class="card" href="music.html" style="text-decoration:none;">
+          <div class="eyebrow">music room</div>
+          <p class="muted">favorite songs, spinning on the shelf.</p>
+        </a>
+        <a class="card" href="gallery.html" style="text-decoration:none;">
+          <div class="eyebrow">photographs</div>
+          <p class="muted">soft light, caught and kept.</p>
+        </a>
       </nav>
-    </header>
+    </section>
 
-    <hr class="rule">
+    <div class="divider" aria-hidden="true"></div>
 
-    <div class="section">
-      <p style="font-family:'VT323',monospace;font-size:1.3rem;color:var(--muted);margin-bottom:0.875rem;">* hi! welcome to bunny garden *</p>
-      <p>i write about things i'm thinking about, things i watch, and whatever else lands here.</p>
-      <p style="margin-top:0.5rem;">feel free to look around :) not sure what this is? <a href="about.html">start here.</a></p>
-    </div>
+    <section class="section">
+      <p class="eyebrow center">lately, in the journal</p>
+      <div id="recent-entries" class="journal-grid" style="margin-top:1.4rem;"></div>
+    </section>
 
-    <hr class="rule">
+  </main>
 
-    <div class="section">
-      <div class="section-head">
-        <span class="section-label">latest</span>
-        <a class="section-more" href="archive.html">all posts &rarr;</a>
-      </div>
-      <ul class="post-list" id="latest-posts"></ul>
-    </div>
+  <footer class="shell site-footer" data-chrome="footer"></footer>
 
-    <hr class="rule">
-
-    <div class="section">
-      <div class="section-head"><span class="section-label">about this place</span></div>
-      <div class="note">
-        <p>this is my little corner of the internet. i use it to think out loud, share things i love, and grow a <a href="garden.html">garden</a> of thoughts over time.</p>
-        <p>if you have a blog too, say hi in the <a href="guestbook.html">guestbook</a>! &#9825;</p>
-      </div>
-    </div>
-
-    <hr class="rule">
-
-    <div class="section">
-      <div class="section-head">
-        <span class="section-label">garden</span>
-        <a class="section-more" href="garden.html">explore &rarr;</a>
-      </div>
-      <p style="font-size:0.9375rem;color:var(--muted);font-style:italic;">a living collection of thoughts. every entry helps it grow.</p>
-    </div>
-
-    <hr class="rule">
-
-    <footer>
-      <div class="footer-links">
-        <a href="mailto:you@email.com">contact</a>
-        <a href="guestbook.html">guestbook</a>
-        <a href="feed.xml">rss</a>
-      </div>
-      <span>made with &#9825;</span>
-    </footer>
-
-  </div>
-
-  <!-- posts are loaded automatically from posts.js — no need to edit this file! -->
-  <script src="posts.js"></script>
-  <script>
-    var list = document.getElementById('latest-posts');
-    if (!posts || posts.length === 0) {
-      list.innerHTML = '<p class="empty-msg">no posts yet — but the <a href="garden.html">garden</a> is growing.</p>';
-    } else {
-      var html = '';
-      var show = posts.slice(0, 4);
-      show.forEach(function(p) {
-        html += '<li class="post-item">';
-        html += '<a class="post-title" href="posts/' + p.slug + '.html">' + p.title + '</a>';
-        html += '<span class="post-date">' + p.date + '</span>';
-        html += '</li>';
-      });
-      list.innerHTML = html;
-    }
-  </script>
+  <script src="assets/atmosphere.js"></script>
+  <script src="content/journal.js"></script>
+  <script src="assets/render.js"></script>
 </body>
 </html>
