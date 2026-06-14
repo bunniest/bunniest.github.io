@@ -29,6 +29,40 @@ const SITE = {
 /* honor the visitor's motion preference */
 const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* ── hand-drawn doodles (little wobbly SVGs, not stock emoji) ──── */
+const DOODLES = {
+  star:    '<svg viewBox="0 0 24 24"><path d="M12 2.6l2.7 6.3 6.8.5-5.2 4.3 1.7 6.6L12 16.6 6 20.3l1.7-6.6L2.5 9.4l6.8-.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+  sparkle: '<svg viewBox="0 0 24 24"><path d="M12 1.5c.6 5.4 1.7 8.4 9 9.5-7.3 1.1-8.4 4.1-9 9.5-.6-5.4-1.7-8.4-9-9.5 7.3-1.1 8.4-4.1 9-9.5z" fill="currentColor"/></svg>',
+  moon:    '<svg viewBox="0 0 24 24"><path d="M17 3a9 9 0 1 0 4.5 13A7.2 7.2 0 0 1 17 3z" fill="currentColor"/><circle cx="8.6" cy="8" r="0.9" fill="#110f17"/></svg>',
+  heart:   '<svg viewBox="0 0 24 24"><path d="M12 20.6S3.5 14.6 3.5 8.9A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 8.5 1.9C20.5 14.6 12 20.6 12 20.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+  flower:  '<svg viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="5" r="2.7"/><circle cx="18.6" cy="9.6" r="2.7"/><circle cx="16" cy="17.6" r="2.7"/><circle cx="8" cy="17.6" r="2.7"/><circle cx="5.4" cy="9.6" r="2.7"/></g><circle cx="12" cy="11.6" r="3" fill="#f3cf8e"/></svg>',
+  leaf:    '<svg viewBox="0 0 24 24"><path d="M12 3C6 8 6 17 12 21c6-4 6-13 0-18z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6v12" stroke="currentColor" stroke-width="1.3"/></svg>',
+  letter:  '<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 7l8.5 6.5L20.5 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
+  flame:   '<svg viewBox="0 0 24 24"><path d="M12 2.5c3 4 6 6 6 10a6 6 0 0 1-12 0c0-2 1-3.6 2.6-5 .2 1.5.9 2.3 1.9 2.8C9.6 8 10 5.5 12 2.5z" fill="currentColor"/></svg>',
+  tv:      '<svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 8l4-4 4 4M9 22h6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
+  bud:     '<svg viewBox="0 0 24 24"><path d="M12 21v-8M12 13c0-3.2-2.2-5.2-5.2-5.2C6.8 11 9 13 12 13zM12 11c0-3.2 2.2-5.2 5.2-5.2C17.2 9 15 11 12 11z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+};
+
+function doodle(name) {
+  return '<span class="doodle" aria-hidden="true">' + (DOODLES[name] || DOODLES.star) + '</span>';
+}
+window.DOODLES = DOODLES;
+window.doodle = doodle;
+
+/* a wobbly hand-drawn underline, used beneath titles */
+window.squiggle = function () {
+  return '<span class="squiggle" aria-hidden="true"><svg viewBox="0 0 150 10" preserveAspectRatio="none"><path d="M2 6 Q14 1 26 6 T50 6 T74 6 T98 6 T122 6 T148 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>';
+};
+
+/* replace any <span data-doodle="name"> in static html with its svg */
+function fillDoodles() {
+  document.querySelectorAll('[data-doodle]').forEach((el) => {
+    el.innerHTML = DOODLES[el.dataset.doodle] || DOODLES.star;
+    el.classList.add('doodle');
+    el.setAttribute('aria-hidden', 'true');
+  });
+}
+
 /* ── 1. background atmosphere ─────────────────────────────────── */
 function buildAtmosphere() {
   const frag = document.createDocumentFragment();
@@ -58,18 +92,20 @@ function buildAtmosphere() {
     field.appendChild(s);
   }
 
-  // a handful of warm floating candle-lights
-  const orbCount = REDUCE_MOTION ? 0 : 7;
-  for (let i = 0; i < orbCount; i++) {
-    const o = document.createElement('span');
-    o.className = 'orb';
-    const size = Math.random() * 90 + 40;
-    o.style.width = o.style.height = size + 'px';
-    o.style.left = Math.random() * 95 + '%';
-    o.style.top = Math.random() * 95 + '%';
-    o.style.setProperty('--fl', (Math.random() * 16 + 16).toFixed(1) + 's');
-    o.style.animationDelay = (Math.random() * 8).toFixed(1) + 's';
-    field.appendChild(o);
+  // a few bigger hand-drawn doodle-stars sprinkled around like stickers
+  const big = ['star', 'sparkle', 'moon', 'heart', 'flower'];
+  const bigCount = 9;
+  for (let i = 0; i < bigCount; i++) {
+    const d = document.createElement('span');
+    d.className = 'doodle-star';
+    const size = Math.random() * 16 + 12;
+    d.style.width = d.style.height = size + 'px';
+    d.style.left = Math.random() * 94 + '%';
+    d.style.top = Math.random() * 94 + '%';
+    d.style.setProperty('--tw', (Math.random() * 5 + 5).toFixed(1) + 's');
+    d.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
+    d.innerHTML = DOODLES[big[i % big.length]];
+    field.appendChild(d);
   }
   frag.appendChild(field);
 
@@ -87,7 +123,8 @@ function buildChrome() {
       return `<a href="${n.href}"${current ? ' aria-current="page"' : ''}>${n.label}</a>`;
     }).join('');
     header.innerHTML = `
-      <a class="brand" href="index.html">${SITE.name} <span class="heart" aria-hidden="true">♥</span></a>
+      <a class="brand" href="index.html">${SITE.name} ${doodle('heart')}</a>
+      ${window.squiggle()}
       <div class="tagline">${SITE.tagline}</div>
       <nav class="nav" aria-label="primary">${links}</nav>`;
   }
@@ -97,7 +134,7 @@ function buildChrome() {
     const year = new Date().getFullYear();
     footer.innerHTML = `
       <div class="divider-star" aria-hidden="true"></div>
-      <p>${SITE.footer} <span class="heart" aria-hidden="true">♥</span></p>
+      <p>${SITE.footer} ${doodle('heart')}</p>
       <p class="muted" style="font-size:0.85rem;margin-top:0.4rem;">
         ${SITE.name} · ${year} · <a href="guestbook.html">leave a note</a>
       </p>`;
@@ -188,7 +225,7 @@ function initMemoryModal() {
   }
 
   const open = (btn) => {
-    panel.querySelector('.glyph').textContent = btn.dataset.glyph || '✦';
+    panel.querySelector('.glyph').innerHTML = doodle(btn.dataset.doodle || 'star');
     panel.querySelector('h3').textContent = btn.dataset.title || '';
     panel.querySelector('.when').textContent = btn.dataset.when || '';
     panel.querySelector('.body').textContent = btn.dataset.body || '';
@@ -210,6 +247,7 @@ window.Heavenly = { initLightbox, initMemoryModal };
 document.addEventListener('DOMContentLoaded', () => {
   buildAtmosphere();
   buildChrome();
+  fillDoodles();
   // if a page has static (non-rendered) lightbox/memory elements, these
   // still wire them up; render.js re-calls them after dynamic injection.
   initLightbox();

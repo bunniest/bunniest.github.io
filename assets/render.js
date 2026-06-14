@@ -67,18 +67,19 @@
     }).join('');
   }
 
-  /* ── memory garden: glowing blooms ──────────────────────────── */
+  /* ── memory garden: little taped keepsakes ──────────────────── */
   function renderMemories(el) {
     const list = window.MEMORIES || [];
     if (!list.length) { el.innerHTML = '<p class="empty">no memories planted yet.</p>'; return; }
+    const draw = window.doodle || ((n) => '');
     el.innerHTML = list.map((m, i) => {
-      const glow = hueColor[m.hue] || 'var(--candle)';
+      const name = m.doodle || m.glyph || 'star';
       return `
         <button class="memory" data-memory
-          data-glyph="${esc(m.glyph)}" data-title="${esc(m.title)}"
+          data-doodle="${esc(name)}" data-title="${esc(m.title)}"
           data-when="${esc(m.when)}" data-body="${esc(m.body)}"
           aria-label="open memory: ${esc(m.title)}">
-          <span class="bloom" style="--ps:${(4 + (i % 5)).toFixed(1)}s;color:${glow};box-shadow:0 0 30px -6px ${glow};">${esc(m.glyph)}</span>
+          <span class="bloom" style="--ps:${(4 + (i % 5)).toFixed(1)}s;">${draw(name)}</span>
           <span class="label">${esc(m.title)}</span>
           <span class="when">${esc(m.when)}</span>
         </button>`;
@@ -126,7 +127,7 @@
     el.innerHTML = list.map((ph) => {
       const inner = ph.src
         ? `<img src="${esc(ph.src)}" alt="${esc(ph.caption || '')}" loading="lazy">`
-        : `<div class="ph" style="background:${esc(ph.gradient || 'var(--navy)')};" role="img" aria-label="${esc(ph.caption || 'photograph')}"></div>`;
+        : `<div class="ph" style="background:${esc(ph.gradient || 'var(--paper-navy)')};" role="img" aria-label="${esc(ph.caption || 'photograph')}"></div>`;
       return `
         <figure data-lightbox>
           ${inner}
@@ -148,7 +149,7 @@
       </div>`).join('');
     el.innerHTML = `
       <div class="profile">
-        <div class="avatar" aria-hidden="true">${esc(p.avatar || '✦')}</div>
+        <div class="avatar" aria-hidden="true">${(window.doodle || (() => ''))(p.doodle || 'moon')}</div>
         <div>
           <h1 class="page-title" style="margin:0;">${esc(p.name)}</h1>
           ${p.pronouns ? `<div class="muted script" style="font-size:1.3rem;">${esc(p.pronouns)}</div>` : ''}

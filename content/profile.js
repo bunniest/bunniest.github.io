@@ -3,7 +3,8 @@
    ════════════════════════════════════════════════════════════════ */
 
 window.PROFILE = {
-  avatar: "🌙",                       // any emoji/symbol for your little portrait
+  doodle: "moon",                     // your little portrait doodle:
+                                      // star·sparkle·moon·heart·flower·leaf·letter·flame·tv·bud
   name: "a keeper of soft hours",     // your name or a name for yourself
   pronouns: "",                       // optional, e.g. "she/her" — leave "" to hide
 
