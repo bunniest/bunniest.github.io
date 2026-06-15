@@ -27,7 +27,7 @@
         <div class="kicker">tonight's entry</div>
         <h2>${esc(f.title)}</h2>
         <div class="meta">${esc(f.date)}${f.mood ? ' · feeling ' + esc(f.mood) : ''}</div>
-        <p class="excerpt"${f.hand ? ' style="font-family:var(--script);font-size:1.35rem;line-height:1.5;"' : ''}>${esc(f.excerpt)}</p>
+        <p class="excerpt">${esc(f.excerpt)}</p>
         <a class="link more" href="${link}">read on the journal &rarr;</a>
       </article>`;
   }
