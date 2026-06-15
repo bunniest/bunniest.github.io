@@ -8,6 +8,14 @@ window.PROFILE = {
   name: "a keeper of soft hours",     // your name or a name for yourself
   pronouns: "",                       // optional, e.g. "she/her" — leave "" to hide
 
+  // the little labeled bio card. add/remove/rename any rows you like.
+  bio: [
+    { label: "name", value: "—— (your name here)" },
+    { label: "lives", value: "somewhere it's always midnight" },
+    { label: "loves", value: "slow songs, candlelight, the moon" },
+    { label: "keeps", value: "this little diary" }
+  ],
+
   // a few paragraphs. write them like you'd write to someone you love.
   intro: [
     "hello, and welcome to my midnight. this is a small, candlelit place i keep for writing, remembering, and holding on to the things that glow.",

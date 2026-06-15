@@ -53,6 +53,7 @@ const DOODLES = {
   flame:   '<svg viewBox="0 0 24 24"><path d="M12 2.5c3 4 6 6 6 10a6 6 0 0 1-12 0c0-2 1-3.6 2.6-5 .2 1.5.9 2.3 1.9 2.8C9.6 8 10 5.5 12 2.5z" fill="currentColor"/></svg>',
   tv:      '<svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 8l4-4 4 4M9 22h6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>',
   bud:     '<svg viewBox="0 0 24 24"><path d="M12 21v-8M12 13c0-3.2-2.2-5.2-5.2-5.2C6.8 11 9 13 12 13zM12 11c0-3.2 2.2-5.2 5.2-5.2C17.2 9 15 11 12 11z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  bunny:   '<svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M9 9.5C7.6 6.6 7.2 3.2 8.5 2.8 9.8 2.4 10.6 5.4 10.8 8"/><path d="M15 9.5c1.4-2.9 1.8-6.3.5-6.7-1.3-.4-2.1 2.6-2.3 5.2"/><circle cx="12" cy="14.5" r="5.4"/></g><circle cx="10.1" cy="13.6" r="0.8" fill="currentColor"/><circle cx="13.9" cy="13.6" r="0.8" fill="currentColor"/><circle cx="12" cy="15.4" r="0.7" fill="#e6a6bf"/><path d="M12 16.1v1M10.7 17.4c.8.5 1.8.5 2.6 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
 };
 
 function doodle(name) {
@@ -146,6 +147,24 @@ function stampsHTML(list) {
     `<span class="stamp b${(i % 4) + 1}">${s}</span>`).join('');
 }
 
+/* the site name spelled out in little crooked letter-tiles */
+function titleTiles(text) {
+  const tiles = text.split('').map((ch) =>
+    ch === ' ' ? '<span class="tilespace"></span>'
+               : `<span class="tile" aria-hidden="true">${ch}</span>`).join('');
+  return `<span class="titletiles" role="img" aria-label="${text}">${tiles}</span>`;
+}
+
+/* a cozy little hit counter, kept in the visitor's own browser */
+function hitCount() {
+  let n = 0;
+  try {
+    n = parseInt(localStorage.getItem('heavenly_hits') || '0', 10) + 1;
+    localStorage.setItem('heavenly_hits', String(n));
+  } catch (e) { n = 1; }
+  return String(1206 + n).padStart(6, '0');
+}
+
 /* ── 2. the framed window: title bar + sidebar + content ──────── */
 function buildLayout() {
   const here = currentPage();
@@ -180,9 +199,9 @@ function buildLayout() {
   sidebar.className = 'sidebar';
   sidebar.setAttribute('aria-label', 'site navigation');
   sidebar.innerHTML = `
-    <a class="side-brand" href="index.html">${SITE.name} ${doodle('heart')}</a>
+    <a class="side-brand" href="index.html">${titleTiles(SITE.name)}</a>
     ${window.squiggle()}
-    <div class="side-tagline">${SITE.tagline}</div>
+    <div class="side-tagline">${SITE.tagline} ${doodle('heart')}</div>
     <div class="side-nav">${links}</div>
     <div class="side-panel nowplaying">
       <div class="h">now playing</div>
@@ -192,7 +211,9 @@ function buildLayout() {
       <div class="h">tonight's sky</div>
       <div class="moonbox">${doodle('moon')}<div class="ph"><b>${moonPhase(now)}</b>${dateStr}</div></div>
     </div>
-    <div class="stamps">${stampsHTML(SITE.stamps)}</div>`;
+    <div class="mascot">${doodle('bunny')}<div class="cap">thanks for visiting!</div></div>
+    <div class="stamps">${stampsHTML(SITE.stamps)}</div>
+    <div class="hits">you are visitor no.<b>${hitCount()}</b></div>`;
 
   const content = document.createElement('div');
   content.className = 'content';

@@ -142,6 +142,11 @@
     const p = window.PROFILE;
     if (!p) return;
     const intro = (p.intro || []).map((t) => `<p>${esc(t)}</p>`).join('');
+    const bio = (p.bio || []).map((b) =>
+      `<div class="bio-row"><span class="bio-k">${esc(b.label)}</span><span class="bio-v">${esc(b.value)}</span></div>`).join('');
+    const bioCard = bio
+      ? `<div class="bio-card">${bio}<div class="bio-foot">your webmaster for today</div></div>`
+      : '';
     const favs = (p.favorites || []).map((f) => `
       <div class="fav">
         <h4>${esc(f.title)}</h4>
@@ -155,6 +160,7 @@
           ${p.pronouns ? `<div class="muted script" style="font-size:1.3rem;">${esc(p.pronouns)}</div>` : ''}
         </div>
       </div>
+      ${bioCard}
       <div class="prose" style="margin-top:1.6rem;">${intro}</div>
       <div class="divider-star" aria-hidden="true"></div>
       <h2 class="section-title center">a few of my favorite things</h2>
