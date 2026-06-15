@@ -28,9 +28,12 @@
   --blue-deep: #7d8fc6;
   --rose:      #c8acce;   /* a faint dusty rose, used sparingly */
 
+  --warm:      #f0d2a0;   /* the one warm light — a far streetlamp */
+
   --line:      rgba(174,191,230,0.16);
   --line-soft: rgba(174,191,230,0.08);
   --glow:      rgba(135,160,230,0.16);
+  --glow-warm: rgba(240,210,160,0.12); /* soft lamp glow */
   --rule-line: rgba(174,191,230,0.14);   /* the ruled lines on note paper */
   --margin:    rgba(200,172,206,0.45);    /* the pink margin line */
 
@@ -57,14 +60,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── layered moonlit background ───────────────────────────────── */
+/* ── layered dusk background ──────────────────────────────────── */
+/* a blue twilight sky with one far, warm light — film-grained and
+   softly vignetted, like a photograph taken at the blue hour. */
 .sky {
   position: fixed; inset: 0; z-index: -3; pointer-events: none;
   background:
-    radial-gradient(1100px 640px at 50% -12%, var(--glow), transparent 60%),
-    radial-gradient(820px 560px at 82% 4%, rgba(120,144,210,0.12), transparent 58%),
-    radial-gradient(760px 560px at 14% 22%, rgba(110,110,170,0.10), transparent 60%),
-    linear-gradient(180deg, #11152b 0%, #0c0f1d 46%, var(--bg) 100%);
+    radial-gradient(600px 480px at 26% 72%, var(--glow-warm), transparent 60%),
+    radial-gradient(1100px 660px at 50% -14%, var(--glow), transparent 60%),
+    radial-gradient(820px 560px at 82% 6%, rgba(120,144,210,0.12), transparent 58%),
+    linear-gradient(180deg, #141d3c 0%, #1a2444 30%, #11162c 64%, var(--bg) 100%);
+}
+.vignette {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 42%, transparent 52%, rgba(5,7,16,0.5) 100%);
 }
 .mist {
   position: fixed; inset: -20%; z-index: -2; pointer-events: none;
@@ -75,8 +84,8 @@ body {
 }
 @keyframes drift { from { transform: translate3d(-2%, -1%, 0) scale(1.05); } to { transform: translate3d(2%, 2%, 0) scale(1.12); } }
 .grain {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   mix-blend-mode: screen;
 }
 
@@ -251,7 +260,9 @@ a.link:hover { color: var(--moon); border-color: var(--moon); }
   border-radius: 10px; overflow: hidden; transition: transform 0.7s ease, box-shadow 0.7s ease, border-color 0.7s ease;
 }
 .gallery figure:hover { transform: translateY(-4px); border-color: rgba(174,191,230,0.34); box-shadow: 0 22px 44px -24px rgba(0,0,0,0.9); }
-.gallery img, .gallery .ph { width: 100%; display: block; border-radius: 6px; filter: saturate(0.92) brightness(0.9); transition: filter 1s ease, transform 1.2s ease; }
+/* a soft film vignette on every photo */
+.gallery figure::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 10px; box-shadow: inset 0 0 26px rgba(0,0,0,0.5); }
+.gallery img, .gallery .ph { width: 100%; display: block; border-radius: 6px; filter: saturate(0.85) brightness(0.88) contrast(1.05); transition: filter 1s ease, transform 1.2s ease; }
 .gallery .ph { aspect-ratio: 4/5; }
 .gallery figure:hover img, .gallery figure:hover .ph { filter: saturate(1) brightness(1); transform: scale(1.03); }
 .gallery figcaption { font-family: var(--hand); font-size: 1.2rem; color: var(--ink-soft); text-align: center; padding: 0.5rem 0.2rem 0.1rem; }
