@@ -23,19 +23,7 @@ const SITE = {
     { href: 'about.html',     label: 'about' },
     { href: 'guestbook.html', label: 'guestbook' },
   ],
-  footer: 'kept softly, by candlelight',
-  // the little "now playing" line in the sidebar (decorative)
-  nowPlaying: 'love is heavenly — loveisheavenly',
-  // a marquee that scrolls across the top of every page
-  marquee: '✶ welcome to my little midnight diary · make yourself cozy · the kettle is on · sign the guestbook before you go ✶',
-  // blinkies / stamps shown in the sidebar + footer
-  stamps: [
-    'best viewed at midnight',
-    '100% handmade',
-    'no frameworks, only love',
-    'est. 2026',
-    'dark mode forever',
-  ],
+  footer: 'kept softly, by moonlight',
 };
 
 /* honor the visitor's motion preference */
@@ -45,9 +33,9 @@ const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matc
 const DOODLES = {
   star:    '<svg viewBox="0 0 24 24"><path d="M12 2.6l2.7 6.3 6.8.5-5.2 4.3 1.7 6.6L12 16.6 6 20.3l1.7-6.6L2.5 9.4l6.8-.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
   sparkle: '<svg viewBox="0 0 24 24"><path d="M12 1.5c.6 5.4 1.7 8.4 9 9.5-7.3 1.1-8.4 4.1-9 9.5-.6-5.4-1.7-8.4-9-9.5 7.3-1.1 8.4-4.1 9-9.5z" fill="currentColor"/></svg>',
-  moon:    '<svg viewBox="0 0 24 24"><path d="M17 3a9 9 0 1 0 4.5 13A7.2 7.2 0 0 1 17 3z" fill="currentColor"/><circle cx="8.6" cy="8" r="0.9" fill="#110f17"/></svg>',
+  moon:    '<svg viewBox="0 0 24 24"><path d="M17 3a9 9 0 1 0 4.5 13A7.2 7.2 0 0 1 17 3z" fill="currentColor"/><circle cx="8.6" cy="8" r="0.9" fill="#0a0c15"/></svg>',
   heart:   '<svg viewBox="0 0 24 24"><path d="M12 20.6S3.5 14.6 3.5 8.9A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 8.5 1.9C20.5 14.6 12 20.6 12 20.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
-  flower:  '<svg viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="5" r="2.7"/><circle cx="18.6" cy="9.6" r="2.7"/><circle cx="16" cy="17.6" r="2.7"/><circle cx="8" cy="17.6" r="2.7"/><circle cx="5.4" cy="9.6" r="2.7"/></g><circle cx="12" cy="11.6" r="3" fill="#f3cf8e"/></svg>',
+  flower:  '<svg viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="5" r="2.7"/><circle cx="18.6" cy="9.6" r="2.7"/><circle cx="16" cy="17.6" r="2.7"/><circle cx="8" cy="17.6" r="2.7"/><circle cx="5.4" cy="9.6" r="2.7"/></g><circle cx="12" cy="11.6" r="3" fill="#cad6f2"/></svg>',
   leaf:    '<svg viewBox="0 0 24 24"><path d="M12 3C6 8 6 17 12 21c6-4 6-13 0-18z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 6v12" stroke="currentColor" stroke-width="1.3"/></svg>',
   letter:  '<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 7l8.5 6.5L20.5 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
   flame:   '<svg viewBox="0 0 24 24"><path d="M12 2.5c3 4 6 6 6 10a6 6 0 0 1-12 0c0-2 1-3.6 2.6-5 .2 1.5.9 2.3 1.9 2.8C9.6 8 10 5.5 12 2.5z" fill="currentColor"/></svg>',
@@ -105,18 +93,18 @@ function buildAtmosphere() {
     field.appendChild(s);
   }
 
-  // a few bigger hand-drawn doodle-stars sprinkled around like stickers
-  const big = ['star', 'sparkle', 'moon', 'heart', 'flower'];
-  const bigCount = 9;
+  // a few faint hand-drawn stars, drifting quietly in the dark
+  const big = ['star', 'sparkle', 'moon'];
+  const bigCount = REDUCE_MOTION ? 3 : 5;
   for (let i = 0; i < bigCount; i++) {
     const d = document.createElement('span');
     d.className = 'doodle-star';
-    const size = Math.random() * 16 + 12;
+    const size = Math.random() * 12 + 11;
     d.style.width = d.style.height = size + 'px';
-    d.style.left = Math.random() * 94 + '%';
-    d.style.top = Math.random() * 94 + '%';
-    d.style.setProperty('--tw', (Math.random() * 5 + 5).toFixed(1) + 's');
-    d.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
+    d.style.left = Math.random() * 92 + '%';
+    d.style.top = Math.random() * 92 + '%';
+    d.style.setProperty('--tw', (Math.random() * 5 + 7).toFixed(1) + 's');
+    d.style.animationDelay = (Math.random() * 6).toFixed(1) + 's';
     d.innerHTML = DOODLES[big[i % big.length]];
     field.appendChild(d);
   }
@@ -130,109 +118,24 @@ function currentPage() {
   return (location.pathname.split('/').pop() || 'index.html').toLowerCase();
 }
 
-/* a gentle moon-phase, just for flavor in the sidebar */
-function moonPhase(date) {
-  const synodic = 29.530588853;
-  const known = Date.UTC(2000, 0, 6, 18, 14) / 86400000; // a known new moon (days)
-  const days = date.getTime() / 86400000;
-  let age = (days - known) % synodic;
-  if (age < 0) age += synodic;
-  const names = ['new moon', 'waxing crescent', 'first quarter', 'waxing gibbous',
-    'full moon', 'waning gibbous', 'last quarter', 'waning crescent'];
-  return names[Math.floor((age / synodic) * 8 + 0.5) % 8];
-}
-
-function stampsHTML(list) {
-  return (list || []).map((s, i) =>
-    `<span class="stamp b${(i % 4) + 1}">${s}</span>`).join('');
-}
-
-/* the site name spelled out in little crooked letter-tiles */
-function titleTiles(text) {
-  const tiles = text.split('').map((ch) =>
-    ch === ' ' ? '<span class="tilespace"></span>'
-               : `<span class="tile" aria-hidden="true">${ch}</span>`).join('');
-  return `<span class="titletiles" role="img" aria-label="${text}">${tiles}</span>`;
-}
-
-/* a cozy little hit counter, kept in the visitor's own browser */
-function hitCount() {
-  let n = 0;
-  try {
-    n = parseInt(localStorage.getItem('heavenly_hits') || '0', 10) + 1;
-    localStorage.setItem('heavenly_hits', String(n));
-  } catch (e) { n = 1; }
-  return String(1206 + n).padStart(6, '0');
-}
-
-/* ── 2. the framed window: title bar + sidebar + content ──────── */
-function buildLayout() {
+/* ── 2. shared masthead + footer ──────────────────────────────── */
+function buildChrome() {
   const here = currentPage();
-  const main = document.getElementById('main');
-  if (!main) return;
 
-  // the old centered header placeholder is no longer used
-  const oldHeader = document.querySelector('[data-chrome="header"]');
-  if (oldHeader) oldHeader.remove();
-
-  const links = SITE.nav.map((n) => {
-    const current = n.href.toLowerCase() === here || (here === '' && n.href === 'index.html');
-    return `<a href="${n.href}"${current ? ' aria-current="page"' : ''}>${n.label}</a>`;
-  }).join('');
-
-  const now = new Date();
-  const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-
-  const frame = document.createElement('div');
-  frame.className = 'frame';
-
-  const bar = document.createElement('div');
-  bar.className = 'frame-bar';
-  bar.innerHTML =
-    `<span class="dots" aria-hidden="true"><i style="background:var(--rose)"></i><i style="background:var(--candle)"></i><i style="background:var(--sage)"></i></span>` +
-    `<span class="ttl"><b>✦ ${SITE.name} ✦</b> — a midnight diary</span>`;
-
-  const body = document.createElement('div');
-  body.className = 'frame-body';
-
-  const sidebar = document.createElement('nav');
-  sidebar.className = 'sidebar';
-  sidebar.setAttribute('aria-label', 'site navigation');
-  sidebar.innerHTML = `
-    <a class="side-brand" href="index.html">${titleTiles(SITE.name)}</a>
-    ${window.squiggle()}
-    <div class="side-tagline">${SITE.tagline} ${doodle('heart')}</div>
-    <div class="side-nav">${links}</div>
-    <div class="side-panel nowplaying">
-      <div class="h">now playing</div>
-      <div class="song">${SITE.nowPlaying}</div>
-    </div>
-    <div class="side-panel">
-      <div class="h">tonight's sky</div>
-      <div class="moonbox">${doodle('moon')}<div class="ph"><b>${moonPhase(now)}</b>${dateStr}</div></div>
-    </div>
-    <div class="mascot">${doodle('bunny')}<div class="cap">thanks for visiting!</div></div>
-    <div class="stamps">${stampsHTML(SITE.stamps)}</div>
-    <div class="hits">you are visitor no.<b>${hitCount()}</b></div>`;
-
-  const content = document.createElement('div');
-  content.className = 'content';
-
-  const marquee = document.createElement('div');
-  marquee.className = 'marquee';
-  marquee.setAttribute('aria-hidden', 'true');
-  marquee.innerHTML = `<span>${SITE.marquee} &nbsp;&nbsp; ${SITE.marquee}</span>`;
-
-  main.parentNode.insertBefore(frame, main);
-  frame.appendChild(bar);
-  frame.appendChild(body);
-  body.appendChild(sidebar);
-  body.appendChild(content);
-  content.appendChild(marquee);
-  content.appendChild(main);
+  const header = document.querySelector('[data-chrome="header"]');
+  if (header) {
+    const links = SITE.nav.map((n) => {
+      const current = n.href.toLowerCase() === here || (here === '' && n.href === 'index.html');
+      return `<a href="${n.href}"${current ? ' aria-current="page"' : ''}>${n.label}</a>`;
+    }).join('');
+    header.innerHTML = `
+      <a class="brand" href="index.html">${SITE.name} ${doodle('moon')}</a>
+      ${window.squiggle()}
+      <div class="tagline">${SITE.tagline}</div>
+      <nav class="nav" aria-label="primary">${links}</nav>`;
+  }
 }
 
-/* ── footer ───────────────────────────────────────────────────── */
 function buildFooter() {
   const footer = document.querySelector('[data-chrome="footer"]');
   if (!footer) return;
@@ -240,10 +143,9 @@ function buildFooter() {
   footer.innerHTML = `
     <div class="divider-star" aria-hidden="true"></div>
     <p>${SITE.footer} ${doodle('heart')}</p>
-    <p class="muted" style="font-size:0.85rem;margin-top:0.4rem;">
+    <p class="muted" style="font-size:0.92rem;margin-top:0.4rem;">
       ${SITE.name} · ${year} · <a href="guestbook.html">leave a note</a>
-    </p>
-    <div class="footer-stamps">${stampsHTML(SITE.stamps)}</div>`;
+    </p>`;
 }
 
 /* ── 3. soft lightbox for the gallery ─────────────────────────── */
@@ -351,7 +253,7 @@ window.Heavenly = { initLightbox, initMemoryModal };
 /* ── boot ─────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   buildAtmosphere();
-  buildLayout();
+  buildChrome();
   buildFooter();
   fillDoodles();
   // if a page has static (non-rendered) lightbox/memory elements, these
