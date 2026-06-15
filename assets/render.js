@@ -136,7 +136,7 @@
   /* ── gallery: soft photographs ──────────────────────────────── */
   function renderGallery(el) {
     const list = window.PHOTOS || [];
-    if (!list.length) { el.innerHTML = '<p class="empty">no photographs hung yet.</p>'; return; }
+    if (!list.length) { el.innerHTML = '<p class="empty">no photographs yet — add yours in <strong>content/photos.js</strong>.</p>'; return; }
     el.innerHTML = list.map((ph) => {
       const inner = ph.src
         ? `<img src="${esc(ph.src)}" alt="${esc(ph.caption || '')}" loading="lazy">`
@@ -167,7 +167,7 @@
       </div>`).join('');
     el.innerHTML = `
       <div class="profile">
-        <div class="avatar" aria-hidden="true">${(window.doodle || (() => ''))(p.doodle || 'moon')}</div>
+        <div class="avatar" aria-hidden="true">${p.avatarImg ? `<img src="${esc(p.avatarImg)}" alt="">` : (window.doodle || (() => ''))(p.doodle || 'moon')}</div>
         <div>
           <h1 class="page-title" style="margin:0;">${esc(p.name)}</h1>
           ${p.pronouns ? `<div class="muted script" style="font-size:1.3rem;">${esc(p.pronouns)}</div>` : ''}

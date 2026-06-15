@@ -1,168 +1,114 @@
-# tending the sanctuary — a little guide
+# making it yours
 
-*love is heavenly* is a hand-built static website: just HTML, CSS, and a
-little JavaScript. there's no build step and nothing to install. to change
-what the site says, you only ever edit the small files in the **`content/`**
-folder. everything else takes care of itself.
+This is a deliberately simple, clean shell. It's quiet on purpose — the
+character is supposed to come from **your** photos, graphics and words, not
+from the code. Here's everything you can change, easiest first.
 
-If you can edit a text file and push to GitHub, you can keep this place alive.
-
----
-
-## the shape of things
-
-```
-index.html        home — welcome + featured entry + recent notes
-journal.html      the journal
-garden.html       memory garden
-music.html        music room
-gallery.html      photographs
-about.html        about / profile
-guestbook.html    guestbook
-
-content/          ← THE ONLY FOLDER YOU NORMALLY EDIT
-  journal.js        journal entries
-  memories.js       memory-garden blooms
-  music.js          records on the shelves + embedded players
-  photos.js         the photo album
-  profile.js        your about page + favorite things
-  guestbook.js      the "always shown" guestbook notes
-
-assets/
-  heavenly.css      all the styling (colors live at the very top)
-  atmosphere.js     the moonlight, stars, nav, lightbox (rarely touched)
-  render.js         turns content/*.js into pages (don't need to edit)
-```
-
-Each content file begins with a comment explaining exactly what to do.
-Newest items always go at the **top** of their list.
+You only ever edit plain text files. No build step, nothing to install.
 
 ---
 
-## adding a journal entry
+## the five-minute version
 
-Open `content/journal.js` and copy one entry block:
+| What | Where |
+|------|-------|
+| Site name, tagline, navigation, footer | `assets/atmosphere.js` → the `SITE` object at the very top |
+| **Banner image** across the top | `SITE.banner` (drop the file in `/images`) |
+| **Background image** for the whole page | `SITE.background` |
+| **Accent colour** (links, highlights) | `SITE.accent` |
+| Colours / fonts overall | top of `assets/heavenly.css` (the `:root` block) |
+| Journal entries | `content/journal.js` |
+| Photos | `content/photos.js` (files go in `/photos`) |
+| Memories | `content/memories.js` |
+| Music | `content/music.js` |
+| About / profile | `content/profile.js` |
+| The "right now" note | `content/now.js` |
+| Guestbook seed notes | `content/guestbook.js` |
+
+---
+
+## add a banner or background (this is what makes it feel real)
+
+1. Put an image in the **`/images`** folder (a grainy film photo, a dusk shot,
+   anything that's the vibe).
+2. Open `assets/atmosphere.js` and set it in `SITE`:
+
+```js
+const SITE = {
+  name: 'love is heavenly',
+  tagline: 'a midnight sanctuary',
+  banner: 'images/my-banner.jpg',        // shows across the top of every page
+  background: 'images/dusk.jpg',          // soft, dark photo behind everything
+  accent: '#aebfe6',                      // or your own colour
+  ...
+```
+
+Leave any of them as `''` to skip it. The background is dimmed automatically so
+text stays readable.
+
+## add a journal entry
+
+`content/journal.js` — copy one block, newest at the top:
 
 ```js
 {
-  title:   "a letter to the quiet hour",
-  date:    "june 14, 2026",
-  mood:    "tender",
-  tags:    ["midnight", "longing"],
-  featured: true,      // optional — shows on the home page (use on ONE entry)
-  hand:    true,       // optional — shows the excerpt in handwriting
-  excerpt: "a few lines that hold the feeling...",
-  // href: "posts/your-slug.html"   // optional — link to a full post page
-},
+  title: "the title",
+  date:  "june 15, 2026",
+  mood:  "tender",                 // optional, one word
+  tags:  ["midnight", "longing"],  // optional
+  featured: true,                  // optional — shows on the home page (one entry)
+  hand: true,                      // optional — handwritten style
+  excerpt: "what the entry is about...",
+  // href: "posts/your-slug.html"  // optional — link to a full post page
+}
 ```
 
-Save, commit, push. That's it.
+## add photos
 
-> Want a full long-form post? Make an HTML page (anywhere, e.g. a `posts/`
-> folder), then add `href: "posts/your-slug.html"` to the entry so its title
-> links there.
-
-## adding a memory (a glowing bloom)
-
-`content/memories.js`:
-
-```js
-{
-  glyph: "🌙",                      // the light it shows
-  title: "the moon followed us home",
-  when:  "a warm night, long ago",
-  body:  "the memory itself, written like a whisper.",
-  hue:   "moon"                     // candle | rose | lavender | moon
-},
-```
-
-## adding music
-
-`content/music.js`. Records live on labelled shelves:
-
-```js
-{ title: "love is heavenly", artist: "the band", url: "https://bandcamp.com/..." }
-```
-
-For a real **embedded player**, copy the `<iframe>` embed code from Bandcamp,
-Spotify, or YouTube and add it to the `embeds` list:
-
-```js
-embeds: [
-  { title: "now spinning",
-    html: '<iframe style="border:0;width:100%;height:120px;" src="https://bandcamp.com/EmbeddedPlayer/album=123456/" seamless></iframe>' }
-]
-```
-
-> Only paste embed code from players you trust — it's inserted exactly as written.
-
-## adding photos
-
-1. Drop your image into the **`photos/`** folder.
-2. In `content/photos.js`, add:
+1. Drop the image into **`/photos`**.
+2. In `content/photos.js`:
 
 ```js
 { src: "photos/your-photo.jpg", caption: "a soft caption" }
 ```
 
-No photo yet? Leave a dreamy gradient placeholder instead:
+## a profile picture
 
-```js
-{ gradient: "linear-gradient(160deg, #1d2238, #3a2f4f)", caption: "the moon, half-drawn" }
+In `content/profile.js`, add `avatarImg: "images/me.jpg"` (or leave it out for
+the simple drawn moon).
+
+## graphics, stamps, gifs, dividers
+
+Want the indie-web look? Save real graphics into `/images` and drop them into
+any page's HTML wherever you like, e.g.:
+
+```html
+<img src="images/divider.gif" alt="">
 ```
-
-## editing the about page
-
-Everything is in `content/profile.js` — your name, a few paragraphs, and
-groups of favorite things. Change the `avatar` to any emoji you like.
 
 ---
 
 ## the guestbook
 
-Notes a visitor leaves are saved **in their own browser** (a gentle demo —
-they won't see each other's notes). The notes in `content/guestbook.js` are
-the ones that always show.
-
-To collect notes **everyone can see**, point the form at a free service:
-
-1. Make a form at [Formspree](https://formspree.io) (free tier is fine).
-2. In `guestbook.html`, change the opening form tag to:
-   ```html
-   <form id="gb-form" class="gb-form card" action="https://formspree.io/f/yourid" method="POST">
-   ```
-3. Add `name="message"` to the textarea if Formspree asks for it.
-
-Submissions then arrive in your inbox, and you can copy the loveliest ones
-into `content/guestbook.js` by hand.
+Notes visitors leave are saved in *their own* browser (a gentle demo). The notes
+in `content/guestbook.js` always show. To collect notes everyone can see, point
+the form at a free service like [Formspree](https://formspree.io): in
+`guestbook.html`, change the form tag to
+`<form ... action="https://formspree.io/f/yourid" method="POST">`.
 
 ---
 
-## changing the look
+## see it locally
 
-- **Colors:** the top of `assets/heavenly.css` (the `:root` block) holds every
-  color — charcoal, navy, candlelight, moonlight, rose, lavender. Change a few
-  values and the whole mood shifts.
-- **Site name, tagline, navigation, footer:** the `SITE` object at the top of
-  `assets/atmosphere.js`.
-- **Fonts:** swapped via the Google Fonts `<link>` in each page's `<head>` and
-  the `--serif` / `--body` / `--script` variables in the CSS.
-
----
-
-## seeing it locally
-
-Just open `index.html` in a browser. For the cleanest result (so the fonts and
-scripts load exactly as online), run a tiny local server:
+Open `index.html`, or run a tiny server for the cleanest result:
 
 ```bash
 python3 -m http.server
-# then visit http://localhost:8000
+# visit http://localhost:8000
 ```
 
-## publishing
+## publish
 
-This repo is set up as a GitHub Pages site. Commit and push to your published
-branch and the changes go live within a minute or two.
+Commit and push — it's a GitHub Pages site and goes live in a minute or two.
 
-*keep it soft. ♥*
+*it's yours now. fill it with real things.*

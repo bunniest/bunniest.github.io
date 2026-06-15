@@ -24,6 +24,14 @@ const SITE = {
     { href: 'guestbook.html', label: 'guestbook' },
   ],
   footer: 'kept softly, by moonlight',
+
+  // ── make it yours (all optional — leave '' to skip) ──
+  // a banner image across the top of every page (drop a file in /images):
+  banner: '',          // e.g. 'images/banner.jpg'
+  // a full-page background image (a soft, dark photo works best):
+  background: '',      // e.g. 'images/dusk.jpg'
+  // the one accent colour (links, highlights). leave '' for the default:
+  accent: '',          // e.g. '#aebfe6'
 };
 
 /* honor the visitor's motion preference */
@@ -55,40 +63,6 @@ window.squiggle = function () {
   return '<span class="squiggle" aria-hidden="true"><svg viewBox="0 0 150 10" preserveAspectRatio="none"><path d="M2 6 Q14 1 26 6 T50 6 T74 6 T98 6 T122 6 T148 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>';
 };
 
-/* a little hand-drawn dusk scene for the masthead — a blue twilight
-   with telephone wires, a glowing lamp and a low moon (the album-cover
-   feeling), framed like a small film photograph. */
-const MASTHEAD_ART = `
-  <svg class="masthead-art" viewBox="0 0 150 120" aria-hidden="true">
-    <defs>
-      <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#161f40"/>
-        <stop offset="0.55" stop-color="#26345c"/>
-        <stop offset="1" stop-color="#3a4a72"/>
-      </linearGradient>
-      <radialGradient id="lamp" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0" stop-color="#ffe6b3"/>
-        <stop offset="1" stop-color="#ffe6b3" stop-opacity="0"/>
-      </radialGradient>
-      <clipPath id="frame"><rect x="6" y="6" width="138" height="100" rx="4"/></clipPath>
-    </defs>
-    <g clip-path="url(#frame)">
-      <rect x="6" y="6" width="138" height="100" fill="url(#dusk)"/>
-      <circle cx="40" cy="32" r="8.5" fill="#cdd9f2" opacity="0.85"/>
-      <g stroke="#0b1024" stroke-width="2" fill="none" opacity="0.9">
-        <path d="M101 16 v74"/>
-        <path d="M87 30 h28 M89 38 h24"/>
-        <path d="M6 50 L101 30 L144 44"/>
-        <path d="M6 66 L101 38"/>
-        <path d="M101 34 L144 28"/>
-      </g>
-      <circle cx="68" cy="58" r="11" fill="url(#lamp)"/>
-      <circle cx="68" cy="58" r="2.1" fill="#ffe6b3"/>
-      <path d="M6 108 q7 -24 15 -25 q3 -11 10 -6 q8 -11 17 -2 q10 -7 15 6 q12 -3 13 15 q14 -9 18 8 q10 -5 15 6 q9 -6 17 4 l5 17 H6 z" fill="#0a0e1f"/>
-    </g>
-    <rect x="6" y="6" width="138" height="100" rx="4" fill="none" stroke="rgba(174,191,230,0.28)"/>
-  </svg>`;
-
 /* replace any <span data-doodle="name"> in static html with its svg */
 function fillDoodles() {
   document.querySelectorAll('[data-doodle]').forEach((el) => {
@@ -98,53 +72,15 @@ function fillDoodles() {
   });
 }
 
-/* ── 1. background atmosphere ─────────────────────────────────── */
+/* ── 1. optional background image + accent colour ─────────────── */
 function buildAtmosphere() {
-  const frag = document.createDocumentFragment();
-
-  ['sky', 'mist', 'grain', 'vignette'].forEach((cls) => {
-    const d = document.createElement('div');
-    d.className = cls;
-    d.setAttribute('aria-hidden', 'true');
-    frag.appendChild(d);
-  });
-
-  const field = document.createElement('div');
-  field.className = 'starfield';
-  field.setAttribute('aria-hidden', 'true');
-
-  // gentle star scatter — fewer if motion is reduced
-  const starCount = REDUCE_MOTION ? 40 : 90;
-  for (let i = 0; i < starCount; i++) {
-    const s = document.createElement('span');
-    s.className = 'star';
-    const size = Math.random() * 2.4 + 0.6;
-    s.style.width = s.style.height = size + 'px';
-    s.style.left = Math.random() * 100 + '%';
-    s.style.top = Math.random() * 100 + '%';
-    s.style.setProperty('--tw', (Math.random() * 6 + 4).toFixed(1) + 's');
-    s.style.animationDelay = (Math.random() * 6).toFixed(1) + 's';
-    field.appendChild(s);
+  if (SITE.accent) {
+    document.documentElement.style.setProperty('--accent', SITE.accent);
   }
-
-  // a few faint hand-drawn stars, drifting quietly in the dark
-  const big = ['star', 'sparkle', 'moon'];
-  const bigCount = REDUCE_MOTION ? 3 : 5;
-  for (let i = 0; i < bigCount; i++) {
-    const d = document.createElement('span');
-    d.className = 'doodle-star';
-    const size = Math.random() * 12 + 11;
-    d.style.width = d.style.height = size + 'px';
-    d.style.left = Math.random() * 92 + '%';
-    d.style.top = Math.random() * 92 + '%';
-    d.style.setProperty('--tw', (Math.random() * 5 + 7).toFixed(1) + 's');
-    d.style.animationDelay = (Math.random() * 6).toFixed(1) + 's';
-    d.innerHTML = DOODLES[big[i % big.length]];
-    field.appendChild(d);
+  if (SITE.background) {
+    document.documentElement.style.setProperty('--page-bg', `url("${SITE.background}")`);
+    document.body.classList.add('has-bg');
   }
-  frag.appendChild(field);
-
-  document.body.prepend(frag);
 }
 
 /* current page filename, for marking the active nav link */
@@ -152,7 +88,7 @@ function currentPage() {
   return (location.pathname.split('/').pop() || 'index.html').toLowerCase();
 }
 
-/* ── 2. shared masthead + footer ──────────────────────────────── */
+/* ── 2. shared header + footer ────────────────────────────────── */
 function buildChrome() {
   const here = currentPage();
 
@@ -162,14 +98,13 @@ function buildChrome() {
       const current = n.href.toLowerCase() === here || (here === '' && n.href === 'index.html');
       return `<a href="${n.href}"${current ? ' aria-current="page"' : ''}>${n.label}</a>`;
     }).join('');
+    const banner = SITE.banner
+      ? `<img class="banner" src="${SITE.banner}" alt="">` : '';
     header.innerHTML = `
-      <div class="masthead-text">
-        <a class="brand" href="index.html">${SITE.name}</a>
-        ${window.squiggle()}
-        <div class="tagline">${SITE.tagline} ${doodle('moon')}</div>
-        <nav class="nav" aria-label="primary">${links}</nav>
-      </div>
-      ${MASTHEAD_ART}`;
+      ${banner}
+      <a class="brand" href="index.html">${SITE.name}</a>
+      <div class="tagline">${SITE.tagline}</div>
+      <nav class="nav" aria-label="primary">${links}</nav>`;
   }
 }
 
