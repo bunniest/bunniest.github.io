@@ -55,6 +55,24 @@ window.squiggle = function () {
   return '<span class="squiggle" aria-hidden="true"><svg viewBox="0 0 150 10" preserveAspectRatio="none"><path d="M2 6 Q14 1 26 6 T50 6 T74 6 T98 6 T122 6 T148 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>';
 };
 
+/* a little hand-drawn moon-and-stars vignette for the masthead */
+const MASTHEAD_ART = `
+  <svg class="masthead-art" viewBox="0 0 150 120" aria-hidden="true">
+    <g stroke="#aebfe6" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85">
+      <path d="M28 26 v11 M22.5 31.5 h11"/>
+      <path d="M60 16 v8 M56 20 h8"/>
+      <path d="M20 64 v8 M16 68 h8"/>
+      <path d="M44 92 v7 M40.5 95.5 h7"/>
+    </g>
+    <path d="M118 34 a33 33 0 1 0 0 58 a26 26 0 1 1 0 -58 z" fill="#cad6f2"/>
+    <g stroke="#0a0c15" stroke-width="2.2" stroke-linecap="round" fill="none">
+      <path d="M104 58 q3.5 3.5 7 0"/>
+      <path d="M115 58 q3.5 3.5 7 0"/>
+      <path d="M107 69 q6.5 5 13 0"/>
+    </g>
+    <path d="M96 86 q-1 6 6 7" stroke="#aebfe6" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  </svg>`;
+
 /* replace any <span data-doodle="name"> in static html with its svg */
 function fillDoodles() {
   document.querySelectorAll('[data-doodle]').forEach((el) => {
@@ -129,10 +147,13 @@ function buildChrome() {
       return `<a href="${n.href}"${current ? ' aria-current="page"' : ''}>${n.label}</a>`;
     }).join('');
     header.innerHTML = `
-      <a class="brand" href="index.html">${SITE.name} ${doodle('moon')}</a>
-      ${window.squiggle()}
-      <div class="tagline">${SITE.tagline}</div>
-      <nav class="nav" aria-label="primary">${links}</nav>`;
+      <div class="masthead-text">
+        <a class="brand" href="index.html">${SITE.name}</a>
+        ${window.squiggle()}
+        <div class="tagline">${SITE.tagline} ${doodle('moon')}</div>
+        <nav class="nav" aria-label="primary">${links}</nav>
+      </div>
+      ${MASTHEAD_ART}`;
   }
 }
 
@@ -142,7 +163,7 @@ function buildFooter() {
   const year = new Date().getFullYear();
   footer.innerHTML = `
     <div class="divider-star" aria-hidden="true"></div>
-    <p>${SITE.footer} ${doodle('heart')}</p>
+    <p class="sign">${SITE.footer} ${doodle('heart')}</p>
     <p class="muted" style="font-size:0.92rem;margin-top:0.4rem;">
       ${SITE.name} · ${year} · <a href="guestbook.html">leave a note</a>
     </p>`;

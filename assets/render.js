@@ -44,6 +44,19 @@
       </a>`).join('');
   }
 
+  /* ── home: the "currently" note ─────────────────────────────── */
+  function renderNow(el) {
+    const n = window.NOW;
+    if (!n) { el.remove(); return; }
+    const order = ['listening', 'reading', 'watching', 'playing', 'making', 'drinking', 'feeling'];
+    const rows = order
+      .filter((k) => n[k])
+      .map((k) => `<li><span>${esc(k)}</span>${esc(n[k])}</li>`)
+      .join('');
+    if (!rows) { el.remove(); return; }
+    el.innerHTML = `<div class="now-title">✦ right now</div><ul>${rows}</ul>`;
+  }
+
   /* ── journal: full list of note cards ───────────────────────── */
   function renderJournal(el) {
     const list = window.JOURNAL || [];
@@ -214,6 +227,7 @@
   /* ── dispatch by which containers exist ─────────────────────── */
   function run() {
     const map = {
+      '#now-note': renderNow,
       '#featured-entry': renderFeatured,
       '#recent-entries': renderRecent,
       '#journal-list': renderJournal,
