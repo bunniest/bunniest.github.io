@@ -24,6 +24,18 @@ const SITE = {
     { href: 'guestbook.html', label: 'guestbook' },
   ],
   footer: 'kept softly, by candlelight',
+  // the little "now playing" line in the sidebar (decorative)
+  nowPlaying: 'love is heavenly — loveisheavenly',
+  // a marquee that scrolls across the top of every page
+  marquee: '✶ welcome to my little midnight diary · make yourself cozy · the kettle is on · sign the guestbook before you go ✶',
+  // blinkies / stamps shown in the sidebar + footer
+  stamps: [
+    'best viewed at midnight',
+    '100% handmade',
+    'no frameworks, only love',
+    'est. 2026',
+    'dark mode forever',
+  ],
 };
 
 /* honor the visitor's motion preference */
@@ -112,33 +124,105 @@ function buildAtmosphere() {
   document.body.prepend(frag);
 }
 
-/* ── 2. shared header + footer ────────────────────────────────── */
-function buildChrome() {
-  const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+/* current page filename, for marking the active nav link */
+function currentPage() {
+  return (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+}
 
-  const header = document.querySelector('[data-chrome="header"]');
-  if (header) {
-    const links = SITE.nav.map((n) => {
-      const current = n.href.toLowerCase() === here || (here === '' && n.href === 'index.html');
-      return `<a href="${n.href}"${current ? ' aria-current="page"' : ''}>${n.label}</a>`;
-    }).join('');
-    header.innerHTML = `
-      <a class="brand" href="index.html">${SITE.name} ${doodle('heart')}</a>
-      ${window.squiggle()}
-      <div class="tagline">${SITE.tagline}</div>
-      <nav class="nav" aria-label="primary">${links}</nav>`;
-  }
+/* a gentle moon-phase, just for flavor in the sidebar */
+function moonPhase(date) {
+  const synodic = 29.530588853;
+  const known = Date.UTC(2000, 0, 6, 18, 14) / 86400000; // a known new moon (days)
+  const days = date.getTime() / 86400000;
+  let age = (days - known) % synodic;
+  if (age < 0) age += synodic;
+  const names = ['new moon', 'waxing crescent', 'first quarter', 'waxing gibbous',
+    'full moon', 'waning gibbous', 'last quarter', 'waning crescent'];
+  return names[Math.floor((age / synodic) * 8 + 0.5) % 8];
+}
 
+function stampsHTML(list) {
+  return (list || []).map((s, i) =>
+    `<span class="stamp b${(i % 4) + 1}">${s}</span>`).join('');
+}
+
+/* ── 2. the framed window: title bar + sidebar + content ──────── */
+function buildLayout() {
+  const here = currentPage();
+  const main = document.getElementById('main');
+  if (!main) return;
+
+  // the old centered header placeholder is no longer used
+  const oldHeader = document.querySelector('[data-chrome="header"]');
+  if (oldHeader) oldHeader.remove();
+
+  const links = SITE.nav.map((n) => {
+    const current = n.href.toLowerCase() === here || (here === '' && n.href === 'index.html');
+    return `<a href="${n.href}"${current ? ' aria-current="page"' : ''}>${n.label}</a>`;
+  }).join('');
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+
+  const frame = document.createElement('div');
+  frame.className = 'frame';
+
+  const bar = document.createElement('div');
+  bar.className = 'frame-bar';
+  bar.innerHTML =
+    `<span class="dots" aria-hidden="true"><i style="background:var(--rose)"></i><i style="background:var(--candle)"></i><i style="background:var(--sage)"></i></span>` +
+    `<span class="ttl"><b>✦ ${SITE.name} ✦</b> — a midnight diary</span>`;
+
+  const body = document.createElement('div');
+  body.className = 'frame-body';
+
+  const sidebar = document.createElement('nav');
+  sidebar.className = 'sidebar';
+  sidebar.setAttribute('aria-label', 'site navigation');
+  sidebar.innerHTML = `
+    <a class="side-brand" href="index.html">${SITE.name} ${doodle('heart')}</a>
+    ${window.squiggle()}
+    <div class="side-tagline">${SITE.tagline}</div>
+    <div class="side-nav">${links}</div>
+    <div class="side-panel nowplaying">
+      <div class="h">now playing</div>
+      <div class="song">${SITE.nowPlaying}</div>
+    </div>
+    <div class="side-panel">
+      <div class="h">tonight's sky</div>
+      <div class="moonbox">${doodle('moon')}<div class="ph"><b>${moonPhase(now)}</b>${dateStr}</div></div>
+    </div>
+    <div class="stamps">${stampsHTML(SITE.stamps)}</div>`;
+
+  const content = document.createElement('div');
+  content.className = 'content';
+
+  const marquee = document.createElement('div');
+  marquee.className = 'marquee';
+  marquee.setAttribute('aria-hidden', 'true');
+  marquee.innerHTML = `<span>${SITE.marquee} &nbsp;&nbsp; ${SITE.marquee}</span>`;
+
+  main.parentNode.insertBefore(frame, main);
+  frame.appendChild(bar);
+  frame.appendChild(body);
+  body.appendChild(sidebar);
+  body.appendChild(content);
+  content.appendChild(marquee);
+  content.appendChild(main);
+}
+
+/* ── footer ───────────────────────────────────────────────────── */
+function buildFooter() {
   const footer = document.querySelector('[data-chrome="footer"]');
-  if (footer) {
-    const year = new Date().getFullYear();
-    footer.innerHTML = `
-      <div class="divider-star" aria-hidden="true"></div>
-      <p>${SITE.footer} ${doodle('heart')}</p>
-      <p class="muted" style="font-size:0.85rem;margin-top:0.4rem;">
-        ${SITE.name} · ${year} · <a href="guestbook.html">leave a note</a>
-      </p>`;
-  }
+  if (!footer) return;
+  const year = new Date().getFullYear();
+  footer.innerHTML = `
+    <div class="divider-star" aria-hidden="true"></div>
+    <p>${SITE.footer} ${doodle('heart')}</p>
+    <p class="muted" style="font-size:0.85rem;margin-top:0.4rem;">
+      ${SITE.name} · ${year} · <a href="guestbook.html">leave a note</a>
+    </p>
+    <div class="footer-stamps">${stampsHTML(SITE.stamps)}</div>`;
 }
 
 /* ── 3. soft lightbox for the gallery ─────────────────────────── */
@@ -246,7 +330,8 @@ window.Heavenly = { initLightbox, initMemoryModal };
 /* ── boot ─────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   buildAtmosphere();
-  buildChrome();
+  buildLayout();
+  buildFooter();
   fillDoodles();
   // if a page has static (non-rendered) lightbox/memory elements, these
   // still wire them up; render.js re-calls them after dynamic injection.
